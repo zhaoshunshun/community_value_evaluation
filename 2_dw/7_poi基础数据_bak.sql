@@ -7,25 +7,29 @@ as
     select t1.* from (
         select community_id,
             community_coordinate,
-            case when types = '150500' then '1km地铁'
-                 when types = '090101' then '1km三甲医院'
-                 when types = '综合医院|专科医院' then '3km医院'
-                 when types = '060100' then '1km购物中心'
-                 when types = '110101' then '1km公园'
-                 when types = '150700' then '1km公交'
-                 when types = '141204' then '1km幼儿园'
-                 when types = '141203' then '1km小学'
-                 when types = '141202' then '1km中学'
-                 when types = '060400' then '1km超市'
-                 when types = '电影院' then '1km电影院'
-                 when types = '咖啡厅' then '1km咖啡馆'
+            case when types = '150500' and radius = '1000' then '1km地铁'
+                 when types = '150500' and radius = '2000' then '2km地铁'
+                 when types = '090101' and radius = '1000' then '1km三甲医院'
+                 when types = '090101' and radius = '3000' then '3km三甲医院'
+                 when types = '综合医院|专科医院' and radius = '3000' then '3km医院'
+                 when types = '060100' and radius = '1000' then '1km购物中心'
+                 when types = '060100' and radius = '3000' then '3km购物中心'
+                 when types = '110101' and radius = '1000' then '1km公园'
+                 when types = '110101' and radius = '3000' then '3km公园'
+                 when types = '150700' and radius = '2000' then '2km公交'
+                 when types = '141204' and radius = '3000' then '3km幼儿园'
+                 when types = '141203' and radius = '3000' then '3km小学'
+                 when types = '141202' and radius = '3000' then '3km中学'
+                 when types = '060400' and radius = '3000' then '3km超市'
+                 when types = '电影院' and radius = '3000' then '3km电影院'
+                 when types = '咖啡厅' and radius = '3000' then '3km咖啡馆'
                 end as types,
             count,
             case when types= '150700' then address
-                when types = '150500'  then concat(address,name)
+                when types = '150500' and radius = '2000' then concat(address,name)
                 else name end as name,
                distance,
-            row_number() over (partition by community_id,types,name order by create_time desc) as ranks
+            row_number() over (partition by community_id,types,radius,name order by create_time desc) as ranks
         from ods_evaluation.ods_community_evaluation_community_mon_report_facilitate
     ) t1
 where t1.ranks = 1
@@ -62,29 +66,33 @@ select
     community_id,
     max(case when types ='1km地铁' then count end ) as subway_1km_cnt,
     max(case when types ='1km地铁' then name end ) as subway_1km_name,
-    max(case when types ='1km三甲医院' then count end ) as three_hospital_1km_cnt,
-    max(case when types ='1km三甲医院' then name end ) as three_hospital_1km_name,
-    max(case when types ='1km医院' then count end ) as hospital_1km_cnt,
-    max(case when types ='1km医院' then name end ) as hospital_1km_name,
-    max(case when types ='1km购物中心' then count end ) as shopping_1km_cnt,
-    max(case when types ='1km购物中心' then name end ) as shopping_1km_name,
+    max(case when types ='2km地铁' then count end ) as subway_2km_cnt,
+    max(case when types ='2km地铁' then name end ) as subway_2km_name,
+    max(case when types ='3km三甲医院' then count end ) as three_hospital_3km_cnt,
+    max(case when types ='3km三甲医院' then name end ) as three_hospital_3km_name,
+    max(case when types ='3km医院' then count end ) as hospital_3km_cnt,
+    max(case when types ='3km医院' then name end ) as hospital_3km_name,
+    max(case when types ='3km购物中心' then count end ) as shopping_3km_cnt,
+    max(case when types ='3km购物中心' then name end ) as shopping_3km_name,
     max(case when types ='1km公园' then count end ) as greenland_1km_cnt,
     max(case when types ='1km公园' then name end ) as greenland_1km_name,
-    max(case when types ='1km公交' then count end ) as bus_1km_cnt,
-    max(case when types ='1km公交' then name end ) as bus_1km_name,
-    max(case when types ='1km幼儿园' then count end ) as nursery_1km_cnt,
-    max(case when types ='1km幼儿园' then name end ) as nursery_1km_name,
-    max(case when types ='1km小学' then count end ) as primary_1km_cnt,
-    max(case when types ='1km小学' then name end ) as primary_1km_name,
-    max(case when types ='1km中学' then count end ) as middle_1km_cnt,
-    max(case when types ='1km中学' then name end ) as middle_1km_name,
-    max(case when types ='1km超市' then count end ) as supermarket_1km_cnt,
-    max(case when types ='1km超市' then name end ) as supermarket_1km_name,
-    max(case when types ='1km电影院' then count end ) as movie_1km_cnt,
-    max(case when types ='1km电影院' then name end ) as movie_1km_name,
-    max(case when types ='1km咖啡馆' then count end ) as coffee_1km_cnt,
-    max(case when types ='1km咖啡馆' then name end ) as coffee_1km_name,
-    min(case when types ='1km地铁' then distance end) as subway_nearby_distince
+    max(case when types ='3km公园' then count end ) as greenland_3km_cnt,
+    max(case when types ='3km公园' then name end ) as greenland_3km_name,
+    max(case when types ='2km公交' then count end ) as bus_2km_cnt,
+    max(case when types ='2km公交' then name end ) as bus_2km_name,
+    max(case when types ='3km幼儿园' then count end ) as nursery_3km_cnt,
+    max(case when types ='3km幼儿园' then name end ) as nursery_3km_name,
+    max(case when types ='3km小学' then count end ) as primary_3km_cnt,
+    max(case when types ='3km小学' then name end ) as primary_3km_name,
+    max(case when types ='3km中学' then count end ) as middle_3km_cnt,
+    max(case when types ='3km中学' then name end ) as middle_3km_name,
+    max(case when types ='3km超市' then count end ) as supermarket_3km_cnt,
+    max(case when types ='3km超市' then name end ) as supermarket_3km_name,
+    max(case when types ='3km电影院' then count end ) as movie_3km_cnt,
+    max(case when types ='3km电影院' then name end ) as movie_3km_name,
+    max(case when types ='3km咖啡馆' then count end ) as coffee_3km_cnt,
+    max(case when types ='3km咖啡馆' then name end ) as coffee_3km_name,
+    min(case when types ='2km地铁' then distance end) as subway_nearby_distince
 from wrk_evaluation.evaluation_community_mon_report_facilitate_02
 group by community_id
 
@@ -103,40 +111,46 @@ select
     t2.subway_1km_cnt,
     t2.subway_1km_name,
     row_number() over (partition by t1.city_cd,t1.district_cd order by t2.subway_1km_cnt asc)/cnt as subway_1km_ranks,
-    t2.three_hospital_1km_cnt,
-    t2.three_hospital_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.three_hospital_1km_cnt asc)/cnt as three_hospital_1km_ranks,
-    t2.hospital_1km_cnt,
-    t2.hospital_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.hospital_1km_cnt asc)/cnt as hospital_1km_ranks,
-    t2.shopping_1km_cnt,
-    t2.shopping_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.shopping_1km_cnt asc)/cnt as shopping_1km_ranks,
+    t2.subway_2km_cnt,
+    t2.subway_2km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.subway_2km_cnt asc)/cnt as subway_2km_ranks,
+    t2.three_hospital_3km_cnt,
+    t2.three_hospital_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.three_hospital_3km_cnt asc)/cnt as three_hospital_3km_ranks,
+    t2.hospital_3km_cnt,
+    t2.hospital_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.hospital_3km_cnt asc)/cnt as hospital_3km_ranks,
+    t2.shopping_3km_cnt,
+    t2.shopping_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.shopping_3km_cnt asc)/cnt as shopping_3km_ranks,
     t2.greenland_1km_cnt,
     t2.greenland_1km_name,
     row_number() over (partition by t1.city_cd,t1.district_cd order by t2.greenland_1km_cnt asc)/cnt as greenland_1km_ranks,
-    t2.bus_1km_cnt,
-    case when t2.bus_1km_name like '%;%' then concat(split(t2.bus_1km_name,';')[0],';',split(t2.bus_1km_name,';')[1])
-        else t2.bus_1km_name end as bus_2km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.bus_1km_cnt asc)/cnt as bus_1km_ranks,
-    t2.nursery_1km_cnt,
-    t2.nursery_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.nursery_1km_cnt asc)/cnt as nursery_1km_ranks,
-    t2.primary_1km_cnt,
-    t2.primary_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.primary_1km_cnt asc)/cnt as primary_1km_ranks,
-    t2.middle_1km_cnt,
-    t2.middle_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.middle_1km_cnt asc)/cnt as middle_1km_ranks,
-    t2.supermarket_1km_cnt,
-    t2.supermarket_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.supermarket_1km_cnt asc)/cnt as supermarket_1km_ranks,
-    t2.movie_1km_cnt,
-    t2.movie_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.movie_1km_cnt asc)/cnt as movie_1km_ranks,
-    t2.coffee_1km_cnt,
-    t2.coffee_1km_name,
-    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.coffee_1km_cnt asc)/cnt as coffee_1km_ranks,
+    t2.greenland_3km_cnt,
+    t2.greenland_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.greenland_3km_cnt asc)/cnt as greenland_3km_ranks,
+    t2.bus_2km_cnt,
+    case when t2.bus_2km_name like '%;%' then concat(split(t2.bus_2km_name,';')[0],';',split(t2.bus_2km_name,';')[1])
+        else t2.bus_2km_name end as bus_2km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.bus_2km_cnt asc)/cnt as bus_2km_ranks,
+    t2.nursery_3km_cnt,
+    t2.nursery_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.nursery_3km_cnt asc)/cnt as nursery_3km_ranks,
+    t2.primary_3km_cnt,
+    t2.primary_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.primary_3km_cnt asc)/cnt as primary_3km_ranks,
+    t2.middle_3km_cnt,
+    t2.middle_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.middle_3km_cnt asc)/cnt as middle_3km_ranks,
+    t2.supermarket_3km_cnt,
+    t2.supermarket_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.supermarket_3km_cnt asc)/cnt as supermarket_3km_ranks,
+    t2.movie_3km_cnt,
+    t2.movie_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.movie_3km_cnt asc)/cnt as movie_3km_ranks,
+    t2.coffee_3km_cnt,
+    t2.coffee_3km_name,
+    row_number() over (partition by t1.city_cd,t1.district_cd order by t2.coffee_3km_cnt asc)/cnt as coffee_3km_ranks,
     t2.subway_nearby_distince
 from dw_evaluation.community_month_report_base_info t1
      left join wrk_evaluation.evaluation_community_mon_report_facilitate_03  t2

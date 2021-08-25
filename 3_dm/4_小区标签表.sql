@@ -5,12 +5,12 @@ drop table dm_evaluation.community_month_report_label;
 insert overwrite table dm_evaluation.community_month_report_label
 select
 t1.community_id,
-case when t2.subway_2km_cnt > 0 and t2.bus_2km_cnt >10 then '交通便捷' else '' end as label_traffic,
+case when t2.subway_1km_cnt > 0 and t2.bus_1km_cnt >10 then '交通便捷' else '' end as label_traffic,
 case when size(split(t3.facilities,','))>5 then '小区配套全' else '' end as label_facilities,
 case when split(t1.parking_rate,':')[1]/split(t1.parking_rate,':')[0] >1 then '车位配比高' else '' end as label_parking,
 case when t1.elevator_desc in ('5','10') then '电梯房' else '' end as label_elevator,
 case when t2.subway_1km_name is not null then t2.subway_1km_name else '' end as label_sub,
-case when t2.subway_2km_cnt>0 and t2.three_hospital_3km_cnt >0 and t2.shopping_3km_cnt>0 then '周边配套全' else '' end as label_arround_facilities,
+case when t2.subway_1km_cnt>0 and t2.three_hospital_1km_cnt >0 and t2.shopping_1km_cnt>0 then '周边配套全' else '' end as label_arround_facilities,
 case when t2.greenland_1km_cnt >0 then '临近绿地公园' else '' end as label_park,
 case when t4.school_name is not null or t4.school_name <> '' then t4.school_name else '' end as label_school,
 case when t5.city_rack_month_12 > t5.rack_month_12 then '房价涨幅高' else '' end as label_price,
