@@ -62,7 +62,7 @@ select
     t1.green_rate,
     concat(regexp_replace(split(t1.parking_rate,':')[0],'1.00','1'),':',cast(split(t1.parking_rate,':')[1] as DECIMAL(8,4)))as parking_rate,
     t1.person_div_car_ind,
-    substring(current_timestamp(),1,4) - round((t1.build_min_year+t1.build_max_year)/2) as building_age,
+    substring(current_timestamp(),1,4) - t1.build_min_year as building_age,
     case when t3.is_elevator_type in ( 1,4) then '0' --没有
          when t3.is_elevator_type = 5 then '10'   --有
          when t3.is_elevator_type in (3,6,8) then '5' --部分有

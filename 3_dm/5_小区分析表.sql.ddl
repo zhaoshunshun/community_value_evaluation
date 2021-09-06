@@ -4,11 +4,14 @@ drop table dm_evaluation.community_month_report_analysis
 create table dm_evaluation.community_month_report_analysis
 (
         community_id STRING COMMENT '小区id',
+        city_cd STRING COMMENT '城市id',
         district_cd STRING COMMENT '小区区域id',
         block_cd STRING COMMENT '小区板块id',
         trans_value_score STRING COMMENT '小区交易价值分数',
         mobility_score STRING COMMENT '小区流动性分数',
         district_mobility_score STRING COMMENT '小区所在区域流动性分数',
+        mobility STRING COMMENT '小区流动性数值',
+        district_mobility STRING COMMENT '区域流动性数值',
         price_score STRING COMMENT '小区价格变动分数',
         district_price_score STRING COMMENT '小区所在区域价格变动分数',
         deal_cnt STRING COMMENT '成交量1年',

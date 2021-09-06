@@ -12,10 +12,10 @@ select
     t1.addr,          --小区地址
     t1.coordinate,          --小区坐标
     t1.fence,          --小区围栏
-    t2.avg_price,          --小区均价
-    t2.ratio_month,          --小区均价环比
-    t3.rack_month_six,          --小区挂牌均价半年涨幅
-    t3.district_rack_month_six,   --区域挂牌均价半年涨幅
+    t2.current_price,          --小区均价
+    cast((t2.current_price - t2.last_month_price) /t2.last_month_price as decimal(10,4)) as ratio_month,          --小区均价环比
+    cast((t2.current_price -  t2.last_6_month_price) /t2.current_price as decimal(10,4)) as rack_month_six,          --小区均价半年涨幅
+    cast((t3.current_price- t3.last_6_month_price)/ t3.last_6_month_price  as decimal(10,4)) as district_rack_month_six,   --区域小区均价半年涨幅
     t1.building_year,          --小区建筑年代
     t1.building_num,          --小区楼栋数量
     t1.building_area,          --小区占地面积
@@ -31,15 +31,16 @@ select
     t1.building_age,          --小区楼龄
     t1.elevator_desc,          --是否有电梯描述
     case when t1.score>2 then  1 else 0 end as is_living_quility,
-    case when t3.rack_month_six is not null then 1 else 0 end as is_rack,
+    case when t3.last_6_month_price is not null then 1 else 0 end as is_rack,
     case when t4.community_id  is not null then 1 else 0  end as is_deal,
     substring(current_timestamp(),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_month_report_base_info t1
 left join dw_evaluation.community_avg_price_cal t2
 on t1.community_id = t2.community_id
-left join dw_evaluation.community_rack_avg_price t3
-on t1.community_id = t3.community_id
+left join dw_evaluation.community_avg_price_district_cal t3
+on t1.city_cd = t3.city_cd
+    and t1.district_cd = t3.district_cd
 left join
     (select community_id from
     dw_evaluation.community_evaluation_month_deal

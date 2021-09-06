@@ -1,42 +1,75 @@
-truncate table wrk_evaluation.community_avg_price_cal_result
-drop table wrk_evaluation.community_avg_price_cal_result
-create table wrk_evaluation.community_avg_price_cal_result as
-    insert overwrite table wrk_evaluation.community_avg_price_cal_result
-select
-    city_name,
-    city_cd,
-    district_name,
-    block_name,
-    community_id,
-    community_name,
-    community_no,
-    mth,
-    price,
-    row_number() over(partition by city_name,community_id order by mth desc) as ranks,
-    current_timestamp() as timestamp_v
-from dm_house.dm_community_price_cal_result_cover_all_new_2
-where city_name in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
 
 truncate table dw_evaluation.community_avg_price_cal;
 drop table dw_evaluation.community_avg_price_cal;
 create table dw_evaluation.community_avg_price_cal as
     insert overwrite table dw_evaluation.community_avg_price_cal
 select
-    t1.city_name,
-    t1.city_cd,
-    t1.district_name,
-    t1.block_name,
-    t1.community_id,
-    t1.community_name,
-    t1.community_no,
-    t1.mth,
-    t1.price as avg_price,
-    cast((t2.price - t1.price)/t1.price as decimal(10,6)) as ratio_month, --小区均价涨幅
-    current_timestamp() as timestamp_v
-    from wrk_evaluation.community_avg_price_cal_result t1
-left join wrk_evaluation.community_avg_price_cal_result t2
-on t1.city_cd =t2.city_cd
-and t1.community_id = t2.community_id
-and t1.ranks = 1
-and t2.ranks = 2
-where t1.ranks =1
+    city_cd,
+    city_name,
+    district_cd,
+    district_name,
+    community_id,
+    community_name,
+    coalesce(price_1,price_2,price_3,price_4,price_5,price_6) as current_price,
+    coalesce(price_2,price_3,price_4,price_5,price_6) as last_month_price,
+    coalesce(price_6,price_5,price_4,price_3,price_2) as last_6_month_price
+from (
+    select
+        city_cd,
+        city_name,
+        district_cd,
+        district_name,
+        community_id,
+        community_name,
+        max(case when ranks = 1 then monthly_avg_price_desc end) as price_1,
+        max(case when ranks = 2 then monthly_avg_price_desc end) as price_2,
+        max(case when ranks = 3 then monthly_avg_price_desc end) as price_3,
+        max(case when ranks = 4 then monthly_avg_price_desc end) as price_4,
+        max(case when ranks = 5 then monthly_avg_price_desc end) as price_5,
+        max(case when ranks = 6 then monthly_avg_price_desc end) as price_6
+    from
+        (
+        select
+        t2.city_cd,
+        t2.city_name as city_name,
+        t2.district_cd,
+        t2.district_name,
+        t1.outer_id as community_id,
+        t1.community_name,
+        t1.biz_time,
+        t1.monthly_avg_price_desc,
+        row_number() over(partition by t2.city_name,t1.outer_id order by t1.biz_time desc ) as ranks
+
+        from wrk_house.esf_price_6_mth t1
+        inner join ods_house.ods_house_asset_community t2
+        on t1.outer_id = t2.community_id
+        where  t2.del_ind <> 1
+        and t2.upper_lower_ind = 1
+        and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
+        ) t2
+    group by
+        city_cd,
+        city_name,
+        district_cd,
+        district_name,
+        community_id,
+        community_name
+) t3
+
+
+truncate table dw_evaluation.community_avg_price_district_cal
+drop table dw_evaluation.community_avg_price_district_cal
+create table dw_evaluation.community_avg_price_district_cal
+as
+    insert overwrite table dw_evaluation.community_avg_price_district_cal
+select
+    city_cd,
+    city_name,
+    district_cd,
+    cast(sum(case when current_price <> 0 then current_price else 0 end )/sum(case when current_price <> 0 then 1 else 0 end) as DECIMAL(13,2))  as current_price,
+    cast(sum(case when last_6_month_price <> 0 then last_6_month_price else 0 end )/sum(case when last_6_month_price <> 0 then 1 else 0 end) as DECIMAL(13,2)) as last_6_month_price
+from dw_evaluation.community_avg_price_cal
+group by
+    city_cd,
+    city_name,
+    district_cd

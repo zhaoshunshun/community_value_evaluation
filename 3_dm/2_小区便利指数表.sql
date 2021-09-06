@@ -12,29 +12,29 @@ select
     t1.subway_1km_name,
     t1.bus_1km_name,
     case when t1.bus_1km_ranks<0.2 then 0
-         when t1.bus_1km_ranks >=0.2 and t1.bus_1km_ranks<0.4 then 1
-         when t1.bus_1km_ranks >=0.4 and t1.bus_1km_ranks<0.6 then 2
-         when t1.bus_1km_ranks >=0.6 and t1.bus_1km_ranks<0.8 then 3
-         when t1.bus_1km_ranks >=0.8 and t1.bus_1km_ranks<0.9 then 4
-         when t1.bus_1km_ranks >=0.9  then 5 end as bus_1km_score,
+         when t1.bus_1km_ranks >=0.2 and t1.bus_1km_ranks<0.4 then 2
+         when t1.bus_1km_ranks >=0.4 and t1.bus_1km_ranks<0.6 then 4
+         when t1.bus_1km_ranks >=0.6 and t1.bus_1km_ranks<0.8 then 6
+         when t1.bus_1km_ranks >=0.8 and t1.bus_1km_ranks<0.9 then 8
+         when t1.bus_1km_ranks >=0.9  then 10 end as bus_1km_score,
     case when t1.subway_1km_ranks<0.2 then 0
-         when t1.subway_1km_ranks >=0.2 and t1.subway_1km_ranks<0.4 then 1
-         when t1.subway_1km_ranks >=0.4 and t1.subway_1km_ranks<0.6 then 2
-         when t1.subway_1km_ranks >=0.6 and t1.subway_1km_ranks<0.8 then 3
-         when t1.subway_1km_ranks >=0.8 and t1.subway_1km_ranks<0.9 then 4
-         when t1.subway_1km_ranks >=0.9  then 5 end as subway_1km_score,
+         when t1.subway_1km_ranks >=0.2 and t1.subway_1km_ranks<0.4 then 2
+         when t1.subway_1km_ranks >=0.4 and t1.subway_1km_ranks<0.6 then 4
+         when t1.subway_1km_ranks >=0.6 and t1.subway_1km_ranks<0.8 then 6
+         when t1.subway_1km_ranks >=0.8 and t1.subway_1km_ranks<0.9 then 8
+         when t1.subway_1km_ranks >=0.9  then 10 end as subway_1km_score,
     case when t3.bus_cnt_rank<0.2 then 0
-         when t3.bus_cnt_rank >=0.2 and t3.bus_cnt_rank<0.4 then 1
-         when t3.bus_cnt_rank >=0.4 and t3.bus_cnt_rank<0.6 then 2
-         when t3.bus_cnt_rank >=0.6 and t3.bus_cnt_rank<0.8 then 3
-         when t3.bus_cnt_rank >=0.8 and t3.bus_cnt_rank<0.9 then 4
-         when t3.bus_cnt_rank >=0.9  then 5 end as bus_district_rank_score,
+         when t3.bus_cnt_rank >=0.2 and t3.bus_cnt_rank<0.4 then 2
+         when t3.bus_cnt_rank >=0.4 and t3.bus_cnt_rank<0.6 then 4
+         when t3.bus_cnt_rank >=0.6 and t3.bus_cnt_rank<0.8 then 6
+         when t3.bus_cnt_rank >=0.8 and t3.bus_cnt_rank<0.9 then 8
+         when t3.bus_cnt_rank >=0.9  then 10 end as bus_district_rank_score,
     case when t3.sub_cnt_rank<0.2 then 0
-         when t3.sub_cnt_rank >=0.2 and t3.sub_cnt_rank<0.4 then 1
-         when t3.sub_cnt_rank >=0.4 and t3.sub_cnt_rank<0.6 then 2
-         when t3.sub_cnt_rank >=0.6 and t3.sub_cnt_rank<0.8 then 3
-         when t3.sub_cnt_rank >=0.8 and t3.sub_cnt_rank<0.9 then 4
-         when t3.sub_cnt_rank >=0.9  then 5 end as sub_district_rank_score,
+         when t3.sub_cnt_rank >=0.2 and t3.sub_cnt_rank<0.4 then 2
+         when t3.sub_cnt_rank >=0.4 and t3.sub_cnt_rank<0.6 then 4
+         when t3.sub_cnt_rank >=0.6 and t3.sub_cnt_rank<0.8 then 6
+         when t3.sub_cnt_rank >=0.8 and t3.sub_cnt_rank<0.9 then 8
+         when t3.sub_cnt_rank >=0.9  then 10 end as sub_district_rank_score,
     t1.subway_nearby_distince,
     t1.nursery_1km_cnt,
     t1.primary_1km_cnt,
@@ -46,42 +46,42 @@ select
     t1.primary_1km_name,
     t1.middle_1km_name,
     case when t1.nursery_1km_ranks<0.2 then 0
-         when t1.nursery_1km_ranks >=0.2 and t1.nursery_1km_ranks<0.4 then 1
-         when t1.nursery_1km_ranks >=0.4 and t1.nursery_1km_ranks<0.6 then 2
-         when t1.nursery_1km_ranks >=0.6 and t1.nursery_1km_ranks<0.8 then 3
-         when t1.nursery_1km_ranks >=0.8 and t1.nursery_1km_ranks<0.9 then 4
-         when t1.nursery_1km_ranks >=0.9  then 5 end as nursery_1km_score,
+         when t1.nursery_1km_ranks >=0.2 and t1.nursery_1km_ranks<0.4 then 2
+         when t1.nursery_1km_ranks >=0.4 and t1.nursery_1km_ranks<0.6 then 4
+         when t1.nursery_1km_ranks >=0.6 and t1.nursery_1km_ranks<0.8 then 6
+         when t1.nursery_1km_ranks >=0.8 and t1.nursery_1km_ranks<0.9 then 8
+         when t1.nursery_1km_ranks >=0.9  then 10 end as nursery_1km_score,
     case when t1.primary_1km_ranks<0.2 then 0
-         when t1.primary_1km_ranks >=0.2 and t1.primary_1km_ranks<0.4 then 1
-         when t1.primary_1km_ranks >=0.4 and t1.primary_1km_ranks<0.6 then 2
-         when t1.primary_1km_ranks >=0.6 and t1.primary_1km_ranks<0.8 then 3
-         when t1.primary_1km_ranks >=0.8 and t1.primary_1km_ranks<0.9 then 4
-         when t1.primary_1km_ranks >=0.9  then 5 end as primary_1km_score,
+         when t1.primary_1km_ranks >=0.2 and t1.primary_1km_ranks<0.4 then 2
+         when t1.primary_1km_ranks >=0.4 and t1.primary_1km_ranks<0.6 then 4
+         when t1.primary_1km_ranks >=0.6 and t1.primary_1km_ranks<0.8 then 6
+         when t1.primary_1km_ranks >=0.8 and t1.primary_1km_ranks<0.9 then 8
+         when t1.primary_1km_ranks >=0.9  then 10 end as primary_1km_score,
     case when t1.middle_1km_ranks<0.2 then 0
-         when t1.middle_1km_ranks >=0.2 and t1.middle_1km_ranks<0.4 then 1
-         when t1.middle_1km_ranks >=0.4 and t1.middle_1km_ranks<0.6 then 2
-         when t1.middle_1km_ranks >=0.6 and t1.middle_1km_ranks<0.8 then 3
-         when t1.middle_1km_ranks >=0.8 and t1.middle_1km_ranks<0.9 then 4
-         when t1.middle_1km_ranks >=0.9  then 5 end as middle_1km_score,
+         when t1.middle_1km_ranks >=0.2 and t1.middle_1km_ranks<0.4 then 2
+         when t1.middle_1km_ranks >=0.4 and t1.middle_1km_ranks<0.6 then 4
+         when t1.middle_1km_ranks >=0.6 and t1.middle_1km_ranks<0.8 then 6
+         when t1.middle_1km_ranks >=0.8 and t1.middle_1km_ranks<0.9 then 8
+         when t1.middle_1km_ranks >=0.9  then 10 end as middle_1km_score,
 
     case when t3.nursery_cnt_rank<0.2 then 0
-         when t3.nursery_cnt_rank >=0.2 and t3.nursery_cnt_rank<0.4 then 1
-         when t3.nursery_cnt_rank >=0.4 and t3.nursery_cnt_rank<0.6 then 2
-         when t3.nursery_cnt_rank >=0.6 and t3.nursery_cnt_rank<0.8 then 3
-         when t3.nursery_cnt_rank >=0.8 and t3.nursery_cnt_rank<0.9 then 4
-         when t3.nursery_cnt_rank >=0.9  then 5 end as nursery_district_rank_score,
+         when t3.nursery_cnt_rank >=0.2 and t3.nursery_cnt_rank<0.4 then 2
+         when t3.nursery_cnt_rank >=0.4 and t3.nursery_cnt_rank<0.6 then 4
+         when t3.nursery_cnt_rank >=0.6 and t3.nursery_cnt_rank<0.8 then 6
+         when t3.nursery_cnt_rank >=0.8 and t3.nursery_cnt_rank<0.9 then 8
+         when t3.nursery_cnt_rank >=0.9  then 10 end as nursery_district_rank_score,
     case when t3.primary_cnt_rank<0.2 then 0
-         when t3.primary_cnt_rank >=0.2 and t3.primary_cnt_rank<0.4 then 1
-         when t3.primary_cnt_rank >=0.4 and t3.primary_cnt_rank<0.6 then 2
-         when t3.primary_cnt_rank >=0.6 and t3.primary_cnt_rank<0.8 then 3
-         when t3.primary_cnt_rank >=0.8 and t3.primary_cnt_rank<0.9 then 4
-         when t3.primary_cnt_rank >=0.9  then 5 end as primary_district_rank_score,
+         when t3.primary_cnt_rank >=0.2 and t3.primary_cnt_rank<0.4 then 2
+         when t3.primary_cnt_rank >=0.4 and t3.primary_cnt_rank<0.6 then 4
+         when t3.primary_cnt_rank >=0.6 and t3.primary_cnt_rank<0.8 then 6
+         when t3.primary_cnt_rank >=0.8 and t3.primary_cnt_rank<0.9 then 8
+         when t3.primary_cnt_rank >=0.9  then 10 end as primary_district_rank_score,
     case when t3.middle_cnt_rank<0.2 then 0
-         when t3.middle_cnt_rank >=0.2 and t3.middle_cnt_rank<0.4 then 1
-         when t3.middle_cnt_rank >=0.4 and t3.middle_cnt_rank<0.6 then 2
-         when t3.middle_cnt_rank >=0.6 and t3.middle_cnt_rank<0.8 then 3
-         when t3.middle_cnt_rank >=0.8 and t3.middle_cnt_rank<0.9 then 4
-         when t3.middle_cnt_rank >=0.9  then 5 end as middle_district_rank_score,
+         when t3.middle_cnt_rank >=0.2 and t3.middle_cnt_rank<0.4 then 2
+         when t3.middle_cnt_rank >=0.4 and t3.middle_cnt_rank<0.6 then 4
+         when t3.middle_cnt_rank >=0.6 and t3.middle_cnt_rank<0.8 then 6
+         when t3.middle_cnt_rank >=0.8 and t3.middle_cnt_rank<0.9 then 8
+         when t3.middle_cnt_rank >=0.9  then 10 end as middle_district_rank_score,
 
     t1.hospital_1km_cnt,
     t1.three_hospital_1km_cnt,
@@ -90,30 +90,30 @@ select
     t1.hospital_1km_name,
     t1.three_hospital_1km_name,
     case when t1.hospital_1km_ranks<0.2 then 0
-         when t1.hospital_1km_ranks >=0.2 and t1.hospital_1km_ranks<0.4 then 1
-         when t1.hospital_1km_ranks >=0.4 and t1.hospital_1km_ranks<0.6 then 2
-         when t1.hospital_1km_ranks >=0.6 and t1.hospital_1km_ranks<0.8 then 3
-         when t1.hospital_1km_ranks >=0.8 and t1.hospital_1km_ranks<0.9 then 4
-         when t1.hospital_1km_ranks >=0.9  then 5 end as hospital_1km_score,
+         when t1.hospital_1km_ranks >=0.2 and t1.hospital_1km_ranks<0.4 then 2
+         when t1.hospital_1km_ranks >=0.4 and t1.hospital_1km_ranks<0.6 then 4
+         when t1.hospital_1km_ranks >=0.6 and t1.hospital_1km_ranks<0.8 then 6
+         when t1.hospital_1km_ranks >=0.8 and t1.hospital_1km_ranks<0.9 then 8
+         when t1.hospital_1km_ranks >=0.9  then 10 end as hospital_1km_score,
     case when t1.three_hospital_1km_ranks<0.2 then 0
-         when t1.three_hospital_1km_ranks >=0.2 and t1.three_hospital_1km_ranks<0.4 then 1
-         when t1.three_hospital_1km_ranks >=0.4 and t1.three_hospital_1km_ranks<0.6 then 2
-         when t1.three_hospital_1km_ranks >=0.6 and t1.three_hospital_1km_ranks<0.8 then 3
-         when t1.three_hospital_1km_ranks >=0.8 and t1.three_hospital_1km_ranks<0.9 then 4
-         when t1.three_hospital_1km_ranks >=0.9  then 5 end as three_hospital_1km_score,
+         when t1.three_hospital_1km_ranks >=0.2 and t1.three_hospital_1km_ranks<0.4 then 2
+         when t1.three_hospital_1km_ranks >=0.4 and t1.three_hospital_1km_ranks<0.6 then 4
+         when t1.three_hospital_1km_ranks >=0.6 and t1.three_hospital_1km_ranks<0.8 then 6
+         when t1.three_hospital_1km_ranks >=0.8 and t1.three_hospital_1km_ranks<0.9 then 8
+         when t1.three_hospital_1km_ranks >=0.9  then 10 end as three_hospital_1km_score,
 
     case when t3.hospital_cnt_rank<0.2 then 0
-         when t3.hospital_cnt_rank >=0.2 and t3.hospital_cnt_rank<0.4 then 1
-         when t3.hospital_cnt_rank >=0.4 and t3.hospital_cnt_rank<0.6 then 2
-         when t3.hospital_cnt_rank >=0.6 and t3.hospital_cnt_rank<0.8 then 3
-         when t3.hospital_cnt_rank >=0.8 and t3.hospital_cnt_rank<0.9 then 4
-         when t3.hospital_cnt_rank >=0.9  then 5 end as hospital_district_rank_score,
+         when t3.hospital_cnt_rank >=0.2 and t3.hospital_cnt_rank<0.4 then 2
+         when t3.hospital_cnt_rank >=0.4 and t3.hospital_cnt_rank<0.6 then 4
+         when t3.hospital_cnt_rank >=0.6 and t3.hospital_cnt_rank<0.8 then 6
+         when t3.hospital_cnt_rank >=0.8 and t3.hospital_cnt_rank<0.9 then 8
+         when t3.hospital_cnt_rank >=0.9  then 10 end as hospital_district_rank_score,
     case when t3.three_hospital_cnt_rank<0.2 then 0
-         when t3.three_hospital_cnt_rank >=0.2 and t3.three_hospital_cnt_rank<0.4 then 1
-         when t3.three_hospital_cnt_rank >=0.4 and t3.three_hospital_cnt_rank<0.6 then 2
-         when t3.three_hospital_cnt_rank >=0.6 and t3.three_hospital_cnt_rank<0.8 then 3
-         when t3.three_hospital_cnt_rank >=0.8 and t3.three_hospital_cnt_rank<0.9 then 4
-         when t3.three_hospital_cnt_rank >=0.9  then 5 end as three_hospital_distrcit_rank_score,
+         when t3.three_hospital_cnt_rank >=0.2 and t3.three_hospital_cnt_rank<0.4 then 2
+         when t3.three_hospital_cnt_rank >=0.4 and t3.three_hospital_cnt_rank<0.6 then 4
+         when t3.three_hospital_cnt_rank >=0.6 and t3.three_hospital_cnt_rank<0.8 then 6
+         when t3.three_hospital_cnt_rank >=0.8 and t3.three_hospital_cnt_rank<0.9 then 8
+         when t3.three_hospital_cnt_rank >=0.9  then 10 end as three_hospital_distrcit_rank_score,
     t1.shopping_1km_cnt,
     t1.supermarket_1km_cnt,
     t3.shopping_cnt,
@@ -121,30 +121,30 @@ select
     t1.shopping_1km_name,
     t1.supermarket_1km_name,
     case when t1.shopping_1km_ranks<0.2 then 0
-         when t1.shopping_1km_ranks >=0.2 and t1.shopping_1km_ranks<0.4 then 1
-         when t1.shopping_1km_ranks >=0.4 and t1.shopping_1km_ranks<0.6 then 2
-         when t1.shopping_1km_ranks >=0.6 and t1.shopping_1km_ranks<0.8 then 3
-         when t1.shopping_1km_ranks >=0.8 and t1.shopping_1km_ranks<0.9 then 4
-         when t1.shopping_1km_ranks >=0.9  then 5 end as shopping_1km_score,
+         when t1.shopping_1km_ranks >=0.2 and t1.shopping_1km_ranks<0.4 then 2
+         when t1.shopping_1km_ranks >=0.4 and t1.shopping_1km_ranks<0.6 then 4
+         when t1.shopping_1km_ranks >=0.6 and t1.shopping_1km_ranks<0.8 then 6
+         when t1.shopping_1km_ranks >=0.8 and t1.shopping_1km_ranks<0.9 then 8
+         when t1.shopping_1km_ranks >=0.9  then 10 end as shopping_1km_score,
     case when t1.supermarket_1km_ranks<0.2 then 0
-         when t1.supermarket_1km_ranks >=0.2 and t1.supermarket_1km_ranks<0.4 then 1
-         when t1.supermarket_1km_ranks >=0.4 and t1.supermarket_1km_ranks<0.6 then 2
-         when t1.supermarket_1km_ranks >=0.6 and t1.supermarket_1km_ranks<0.8 then 3
-         when t1.supermarket_1km_ranks >=0.8 and t1.supermarket_1km_ranks<0.9 then 4
-         when t1.supermarket_1km_ranks >=0.9  then 5 end as supermarket_1km_score,
+         when t1.supermarket_1km_ranks >=0.2 and t1.supermarket_1km_ranks<0.4 then 2
+         when t1.supermarket_1km_ranks >=0.4 and t1.supermarket_1km_ranks<0.6 then 4
+         when t1.supermarket_1km_ranks >=0.6 and t1.supermarket_1km_ranks<0.8 then 6
+         when t1.supermarket_1km_ranks >=0.8 and t1.supermarket_1km_ranks<0.9 then 8
+         when t1.supermarket_1km_ranks >=0.9  then 10 end as supermarket_1km_score,
 
     case when t3.shopping_cnt_rank<0.2 then 0
-         when t3.shopping_cnt_rank >=0.2 and t3.shopping_cnt_rank<0.4 then 1
-         when t3.shopping_cnt_rank >=0.4 and t3.shopping_cnt_rank<0.6 then 2
-         when t3.shopping_cnt_rank >=0.6 and t3.shopping_cnt_rank<0.8 then 3
-         when t3.shopping_cnt_rank >=0.8 and t3.shopping_cnt_rank<0.9 then 4
-         when t3.shopping_cnt_rank >=0.9  then 5 end as shopping_district_rank_score,
+         when t3.shopping_cnt_rank >=0.2 and t3.shopping_cnt_rank<0.4 then 2
+         when t3.shopping_cnt_rank >=0.4 and t3.shopping_cnt_rank<0.6 then 4
+         when t3.shopping_cnt_rank >=0.6 and t3.shopping_cnt_rank<0.8 then 6
+         when t3.shopping_cnt_rank >=0.8 and t3.shopping_cnt_rank<0.9 then 8
+         when t3.shopping_cnt_rank >=0.9  then 10 end as shopping_district_rank_score,
     case when t3.supermarket_cnt_rank<0.2 then 0
-         when t3.supermarket_cnt_rank >=0.2 and t3.supermarket_cnt_rank<0.4 then 1
-         when t3.supermarket_cnt_rank >=0.4 and t3.supermarket_cnt_rank<0.6 then 2
-         when t3.supermarket_cnt_rank >=0.6 and t3.supermarket_cnt_rank<0.8 then 3
-         when t3.supermarket_cnt_rank >=0.8 and t3.supermarket_cnt_rank<0.9 then 4
-         when t3.supermarket_cnt_rank >=0.9  then 5 end as supermarket_district_rank_score,
+         when t3.supermarket_cnt_rank >=0.2 and t3.supermarket_cnt_rank<0.4 then 2
+         when t3.supermarket_cnt_rank >=0.4 and t3.supermarket_cnt_rank<0.6 then 4
+         when t3.supermarket_cnt_rank >=0.6 and t3.supermarket_cnt_rank<0.8 then 6
+         when t3.supermarket_cnt_rank >=0.8 and t3.supermarket_cnt_rank<0.9 then 8
+         when t3.supermarket_cnt_rank >=0.9  then 10 end as supermarket_district_rank_score,
     t1.greenland_1km_cnt,
     t1.movie_1km_cnt,
     t1.coffee_1km_cnt,
@@ -155,42 +155,42 @@ select
     t1.movie_1km_name,
     t1.coffee_1km_name,
     case when t1.greenland_1km_ranks<0.2 then 0
-         when t1.greenland_1km_ranks >=0.2 and t1.greenland_1km_ranks<0.4 then 1
-         when t1.greenland_1km_ranks >=0.4 and t1.greenland_1km_ranks<0.6 then 2
-         when t1.greenland_1km_ranks >=0.6 and t1.greenland_1km_ranks<0.8 then 3
-         when t1.greenland_1km_ranks >=0.8 and t1.greenland_1km_ranks<0.9 then 4
-         when t1.greenland_1km_ranks >=0.9  then 5 end as greenland_1km_score,
+         when t1.greenland_1km_ranks >=0.2 and t1.greenland_1km_ranks<0.4 then 2
+         when t1.greenland_1km_ranks >=0.4 and t1.greenland_1km_ranks<0.6 then 4
+         when t1.greenland_1km_ranks >=0.6 and t1.greenland_1km_ranks<0.8 then 6
+         when t1.greenland_1km_ranks >=0.8 and t1.greenland_1km_ranks<0.9 then 8
+         when t1.greenland_1km_ranks >=0.9  then 10 end as greenland_1km_score,
     case when t1.movie_1km_ranks<0.2 then 0
-         when t1.movie_1km_ranks >=0.2 and t1.movie_1km_ranks<0.4 then 1
-         when t1.movie_1km_ranks >=0.4 and t1.movie_1km_ranks<0.6 then 2
-         when t1.movie_1km_ranks >=0.6 and t1.movie_1km_ranks<0.8 then 3
-         when t1.movie_1km_ranks >=0.8 and t1.movie_1km_ranks<0.9 then 4
-         when t1.movie_1km_ranks >=0.9  then 5 end as movie_1km_score,
+         when t1.movie_1km_ranks >=0.2 and t1.movie_1km_ranks<0.4 then 2
+         when t1.movie_1km_ranks >=0.4 and t1.movie_1km_ranks<0.6 then 4
+         when t1.movie_1km_ranks >=0.6 and t1.movie_1km_ranks<0.8 then 6
+         when t1.movie_1km_ranks >=0.8 and t1.movie_1km_ranks<0.9 then 8
+         when t1.movie_1km_ranks >=0.9  then 10 end as movie_1km_score,
     case when t1.coffee_1km_ranks<0.2 then 0
-         when t1.coffee_1km_ranks >=0.2 and t1.coffee_1km_ranks<0.4 then 1
-         when t1.coffee_1km_ranks >=0.4 and t1.coffee_1km_ranks<0.6 then 2
-         when t1.coffee_1km_ranks >=0.6 and t1.coffee_1km_ranks<0.8 then 3
-         when t1.coffee_1km_ranks >=0.8 and t1.coffee_1km_ranks<0.9 then 4
-         when t1.coffee_1km_ranks >=0.9  then 5 end as coffee_1km_score,
+         when t1.coffee_1km_ranks >=0.2 and t1.coffee_1km_ranks<0.4 then 2
+         when t1.coffee_1km_ranks >=0.4 and t1.coffee_1km_ranks<0.6 then 4
+         when t1.coffee_1km_ranks >=0.6 and t1.coffee_1km_ranks<0.8 then 6
+         when t1.coffee_1km_ranks >=0.8 and t1.coffee_1km_ranks<0.9 then 8
+         when t1.coffee_1km_ranks >=0.9  then 10 end as coffee_1km_score,
 
     case when t3.greenland_cnt_rank<0.2 then 0
-         when t3.greenland_cnt_rank >=0.2 and t3.greenland_cnt_rank<0.4 then 1
-         when t3.greenland_cnt_rank >=0.4 and t3.greenland_cnt_rank<0.6 then 2
-         when t3.greenland_cnt_rank >=0.6 and t3.greenland_cnt_rank<0.8 then 3
-         when t3.greenland_cnt_rank >=0.8 and t3.greenland_cnt_rank<0.9 then 4
-         when t3.greenland_cnt_rank >=0.9  then 5 end as greenland_district_rank_score,
+         when t3.greenland_cnt_rank >=0.2 and t3.greenland_cnt_rank<0.4 then 2
+         when t3.greenland_cnt_rank >=0.4 and t3.greenland_cnt_rank<0.6 then 4
+         when t3.greenland_cnt_rank >=0.6 and t3.greenland_cnt_rank<0.8 then 6
+         when t3.greenland_cnt_rank >=0.8 and t3.greenland_cnt_rank<0.9 then 8
+         when t3.greenland_cnt_rank >=0.9  then 10 end as greenland_district_rank_score,
     case when t3.movie_cnt_rank<0.2 then 0
-         when t3.movie_cnt_rank >=0.2 and t3.movie_cnt_rank<0.4 then 1
-         when t3.movie_cnt_rank >=0.4 and t3.movie_cnt_rank<0.6 then 2
-         when t3.movie_cnt_rank >=0.6 and t3.movie_cnt_rank<0.8 then 3
-         when t3.movie_cnt_rank >=0.8 and t3.movie_cnt_rank<0.9 then 4
-         when t3.movie_cnt_rank >=0.9  then 5 end as movie_district_rank_score,
+         when t3.movie_cnt_rank >=0.2 and t3.movie_cnt_rank<0.4 then 2
+         when t3.movie_cnt_rank >=0.4 and t3.movie_cnt_rank<0.6 then 4
+         when t3.movie_cnt_rank >=0.6 and t3.movie_cnt_rank<0.8 then 6
+         when t3.movie_cnt_rank >=0.8 and t3.movie_cnt_rank<0.9 then 8
+         when t3.movie_cnt_rank >=0.9  then 10 end as movie_district_rank_score,
     case when t3.coffee_cnt_rank<0.2 then 0
-         when t3.coffee_cnt_rank >=0.2 and t3.coffee_cnt_rank<0.4 then 1
-         when t3.coffee_cnt_rank >=0.4 and t3.coffee_cnt_rank<0.6 then 2
-         when t3.coffee_cnt_rank >=0.6 and t3.coffee_cnt_rank<0.8 then 3
-         when t3.coffee_cnt_rank >=0.8 and t3.coffee_cnt_rank<0.9 then 4
-         when t3.coffee_cnt_rank >=0.9  then 5 end as coffee_district_rank_score
+         when t3.coffee_cnt_rank >=0.2 and t3.coffee_cnt_rank<0.4 then 2
+         when t3.coffee_cnt_rank >=0.4 and t3.coffee_cnt_rank<0.6 then 4
+         when t3.coffee_cnt_rank >=0.6 and t3.coffee_cnt_rank<0.8 then 6
+         when t3.coffee_cnt_rank >=0.8 and t3.coffee_cnt_rank<0.9 then 8
+         when t3.coffee_cnt_rank >=0.9  then 10 end as coffee_district_rank_score
 
 from dw_evaluation.community_month_report_convenient_info t1
          left join dw_evaluation.community_month_report_convenient_district_info t3
