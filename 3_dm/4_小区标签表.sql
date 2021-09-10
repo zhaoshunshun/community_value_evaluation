@@ -13,7 +13,7 @@ case when t2.subway_1km_name is not null then t2.subway_1km_name else '' end as 
 case when t2.subway_1km_cnt>0 and t2.three_hospital_1km_cnt >0 and t2.shopping_1km_cnt>0 then '周边配套全' else '' end as label_arround_facilities,
 case when t2.greenland_1km_cnt >0 then '临近绿地公园' else '' end as label_park,
 case when t4.school_name is not null or t4.school_name <> '' then t4.school_name else '' end as label_school,
-case when t5.city_rack_month_12 > t5.rack_month_12 then '房价涨幅高' else '' end as label_price,
+case when (t5.last_6_month_price - t5.current_price) / t5.current_price > (t8.last_6_month_price - t8.current_price) / t8.current_price  then '房价涨幅高' else '' end as label_price,
 case when t1.green_rate >= t6.city_green_rate then '绿化率高' else '' end as label_green,
 case when t1.building_age <=5 then '房龄新' else '' end as label_age,
 case when t7.community_rent_days < t7.city_rent_days  then '房源好租' else '' end as label_rent,
@@ -26,8 +26,12 @@ left join dw_evaluation.community_evaluation_bk_month_strategy t3
 on t1.community_id = t3.community_id
 left join dw_evaluation.community_evaluation_community_school_map t4
 on t1.community_id = t4.community_id and t4.ranks = 1
-left join dw_evaluation.community_rack_avg_price t5
+left join dw_evaluation.community_avg_price_cal t5
 on t1.community_id = t5.community_id
+and  (t5.last_6_month_price - t5.current_price) / t5.current_price >=-0.3
+and (t5.last_6_month_price - t5.current_price) / t5.current_price <=0.3
+left join dw_evaluation.community_avg_price_district_cal t8
+on t1.district_cd = t8.district_cd
 left join
     (
         select city_cd,city_name,avg(green_rate) as city_green_rate from dw_evaluation.community_month_report_base_info group by city_cd,city_name

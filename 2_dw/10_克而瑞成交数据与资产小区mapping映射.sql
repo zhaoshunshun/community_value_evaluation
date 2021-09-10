@@ -29,7 +29,11 @@ select
             and t3.upper_lower_ind = 1
 where t3.community_id is not null and t2.new_tradedate >= add_months(current_timestamp(),-13)
 
---excel上传
+
+
+
+
+--excel上传运营作业后的
 create table wrk_evaluation.community_evaluation_month_asset_cric_map
 (
     citycaption STRING COMMENT '城市',
@@ -38,7 +42,8 @@ create table wrk_evaluation.community_evaluation_month_asset_cric_map
     community_name STRING COMMENT '小区名称',
     community_addr STRING COMMENT '小区地址',
     asset_community_id STRING COMMENT '资产小区id',
-    asset_community_name STRING COMMENT '资产小区名称'
+    asset_community_name STRING COMMENT '资产小区名称',
+    upload_time STRING COMMENT '创建时间'
 ) COMMENT '小区月报-克而瑞与资产mapping表'
     STORED AS TEXTFILE;
 
@@ -58,8 +63,14 @@ as
             community_addr,
             row_number() over (partition by itemid order by citycaption,region,community_name desc, community_addr desc) as ranks
         from ods_evaluation.cric_deal_detail
+        where create_time >=add_months(current_timestamp(),-1)
     ) t1
 where t1.ranks = 1
+
+
+
+
+
 
 --规则匹配
 create table wrk_evaluation.community_evaluation_month_asset_cric_map_result
@@ -75,7 +86,8 @@ as
         t2.city_name as asset_city_name,
         t2.district_name as asset_district_name,
         t2.community_name as asset_community_name,
-        t2.community_addr as asset_community_addr
+        t2.community_addr as asset_community_addr,
+        '1' as match_type
 from wrk_evaluation.cric_deal_community t1
 left join ods_house.ods_house_asset_community t2
     on t1.citycaption = t2.city_name
@@ -97,7 +109,8 @@ t2.community_id as asset_community_id,
 t2.city_name as asset_city_name,
 t2.district_name as asset_district_name,
 t2.community_name as asset_community_name,
-t2.community_addr as asset_community_addr
+t2.community_addr as asset_community_addr,
+       '2' as match_type
 from  wrk_evaluation.community_evaluation_month_asset_cric_map t1
     inner join wrk_evaluation.cric_deal_community t3
     on t1.citycaption = t3.citycaption

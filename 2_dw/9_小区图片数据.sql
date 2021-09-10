@@ -1,6 +1,6 @@
 create table dw_evaluation.community_evaluation_month_pic
 as
-    insert overwrite tabble dw_evaluation.community_evaluation_month_pic
+    insert overwrite table dw_evaluation.community_evaluation_month_pic
     select
            t1.outer_id as community_id,
            t1.outer_picture_id as community_picture_id,

@@ -38,6 +38,8 @@ select
 from dw_evaluation.community_month_report_base_info t1
 left join dw_evaluation.community_avg_price_cal t2
 on t1.community_id = t2.community_id
+    and  (t2.last_6_month_price - t2.current_price) / t2.current_price >=-0.3
+    and (t2.last_6_month_price - t2.current_price) / t2.current_price <=0.3
 left join dw_evaluation.community_avg_price_district_cal t3
 on t1.city_cd = t3.city_cd
     and t1.district_cd = t3.district_cd

@@ -14,8 +14,8 @@ create table dm_evaluation.community_month_report_base_info(
     fence STRING COMMENT '小区围栏',
     avg_price STRING COMMENT '小区均价',
     ratio_month STRING COMMENT '小区均价环比',
-    rack_month_six STRING COMMENT '小区挂牌均价半年涨幅',
-    district_rack_month_six STRING COMMENT '区域挂牌均价半年涨幅',
+    rack_month_six STRING COMMENT '小区均价半年涨幅',   --置空
+    district_rack_month_six STRING COMMENT '区域小区均价半年涨幅',   --置空
     building_year STRING COMMENT '小区建筑年代',
     building_num STRING COMMENT '小区楼栋数量',
     building_area STRING COMMENT '小区占地面积',

@@ -23,6 +23,7 @@ select t2.block_cd,
     sum(distinct t2.is_elevator) as is_elevator_type   --1: 无 2: 有 3:部分有
 from (
     select t1.block_cd,
+           t1.community_id,
         case
             when udf.decryptudf(t1.elevator_num) = '0'  then 1
             when udf.decryptudf(t1.elevator_num) is null or t1.elevator_num is null then 3
