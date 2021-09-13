@@ -298,8 +298,8 @@ select
     t1.city_cd,
     t1.district_cd,
     t2.cnt as deal_cnt,
-    coalesce(case when t2.cnt is null or t1.room_num =0 then null else cast(t2.cnt / t1.room_num  as decimal (10,4)) end,0) as community_deal_rate,
-    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as community_deal_rank,
+    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end )  desc) as community_deal_rank,
+    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end )  asc) as community_deal_rank2,
     t3.community_cnt
 from dw_evaluation.community_month_report_base_info t1
          left join
@@ -324,8 +324,8 @@ create table wrk_evaluation.community_evaluation_month_analysis_08_02 as
     insert overwrite table wrk_evaluation.community_evaluation_month_analysis_08_02
 select  t1.city_cd,
         t1.district_cd,
-        coalesce(case when t2.cnt is null or t1.cnt =0 then 0 else cast(t2.cnt / t1.cnt as decimal (10,4)) end,0) as deal_rate,
         rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_deal_rank,
+        rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) asc) as district_deal_rank2,
         t3.district_cnt
 from (select city_cd,district_cd, sum(room_num) as cnt
       from dw_evaluation.community_month_report_base_info
@@ -356,19 +356,17 @@ as
         t1.city_cd,
         t1.district_cd,
         t1.deal_cnt,
-        t1.community_deal_rate,
-        t2.deal_rate as district_deal_rate,
         t1.community_deal_rank,
         t2.district_deal_rank,
-        cast(rank() over (partition by t1.city_cd order by t1.community_deal_rate asc )/t1.community_cnt as decimal (10,4))       as city_rank,
+        t1.community_deal_rank2/t1.community_cnt       as city_rank,
         t2.district_rank
 from wrk_evaluation.community_evaluation_month_analysis_08_01 t1
 left join (
     select t1.city_cd,
         t1.district_cd,
-           t1.deal_rate,
+        t1.district_cnt,
         t1.district_deal_rank,
-        cast(rank() over (partition by t1.city_cd order by t1.deal_rate asc )/t1.district_cnt as decimal (10,4)) as district_rank
+        t1.district_deal_rank2/t1.district_cnt as district_rank
     from wrk_evaluation.community_evaluation_month_analysis_08_02 t1
     ) t2
 on t1.district_cd = t2.district_cd
@@ -382,8 +380,6 @@ create table wrk_evaluation.community_evaluation_month_analysis_11
 select
     t1.community_id,
     t1.district_cd,
-    t1.community_deal_rate,
-    t1.district_deal_rate,
     t1.city_rank,
     t1.district_rank,
     t1.deal_cnt,
@@ -540,8 +536,8 @@ from wrk_evaluation.community_evaluation_month_analysis_01 t1
     t2.district_rank_score as district_mobility_score,
     t2.community_deal_rank,
     t2.district_deal_rank,
-    t2.city_rank as mobility,
-    t2.district_rank as district_mobility,
+    null as mobility,
+    null as district_mobility,
     t3.district_rack_month_six_score as price_score,
     t3.city_rack_month_six_score as district_price_score,
     cast((t11.current_price -  t11.last_6_month_price) / t11.current_price as decimal(10,4)) as rack_month_six,          --小区均价半年涨幅
