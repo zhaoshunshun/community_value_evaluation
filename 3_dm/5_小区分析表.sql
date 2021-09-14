@@ -10,12 +10,12 @@ select
     t1.community_id,
     t1.city_name,
     t1.district_name,
-        rank() over (partition by t1.city_cd order by t1.volume_rate desc)/t4.community_cnt as block_volume_rate,
-        rank() over (partition by t1.city_cd order by t1.green_rate asc)/t4.community_cnt as block_green_rate,
+        rank() over (partition by t1.city_cd order by case when t1.volume_rate is null then 10000 else t1.volume_rate end desc)/t4.community_cnt as block_volume_rate,
+        rank() over (partition by t1.city_cd order by case when t1.green_rate is null then 0 else t1.green_rate end asc)/t4.community_cnt as block_green_rate,
     concat('1:',cast(cast(t2.block_parking_rate as decimal (10,6)) as STRING)) as block_parking_rate_value,
-        rank() over (partition by t1.city_cd order by split(t1.parking_rate,':')[1] asc)/t4.community_cnt as block_parking_rate,
+        rank() over (partition by t1.city_cd order by case when split(t1.parking_rate,':')[1] is null then 0 else split(t1.parking_rate,':')[1] end asc)/t4.community_cnt as block_parking_rate,
     cast(t2.block_building_age as decimal(10,6)) as block_building_age_value,
-        rank() over (partition by t1.city_cd order by t1.building_age desc)/t4.community_cnt as block_building_age,
+        rank() over (partition by t1.city_cd order by case when t1.building_age is null then 10000 else t1.building_age end desc)/t4.community_cnt as block_building_age,
         t2.city_volume_rate / t3.city_cnt as city_volume_rate,
         t2.city_green_rate / t3.city_cnt as city_green_rate,
         t2.city_parking_rate / t3.city_cnt as city_parking_rate,
@@ -129,7 +129,7 @@ select
     t1.community_id,
     t1.city_cd,
     t1.district_cd,
-        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) / t1.community_cnt  as community_rack_month_six,
+    rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) / t1.community_cnt  as community_rack_month_six,
     t2.district_rack_month_six,
     rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) as community_price_rank,
     t2.district_price_rank
@@ -138,7 +138,7 @@ from wrk_evaluation.community_evaluation_month_analysis_02_01 t1
     select
         t1.city_cd,
         t1.district_cd,
-            rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) / t1.district_cnt  as district_rack_month_six,
+        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) / t1.district_cnt  as district_rack_month_six,
         rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) as district_price_rank
     from wrk_evaluation.community_evaluation_month_analysis_02_02 t1
 ) t2 on t1.district_cd = t2.district_cd

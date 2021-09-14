@@ -9,7 +9,7 @@ as
             community_coordinate,
             case when types = '150500' then '1km地铁'
                  when types = '090101' then '1km三甲医院'
-                 when types = '综合医院|专科医院' then '3km医院'
+                 when types = '综合医院|专科医院' then '1km医院'
                  when types = '060100' then '1km购物中心'
                  when types = '110101' then '1km公园'
                  when types = '150700' then '1km公交'
@@ -102,41 +102,41 @@ select
     t1.district_name,
     t2.subway_1km_cnt,
     t2.subway_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.subway_1km_cnt asc)/cnt as subway_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.subway_1km_cnt is null then 0 else t2.subway_1km_cnt end asc)/cnt as subway_1km_ranks,
     t2.three_hospital_1km_cnt,
     t2.three_hospital_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.three_hospital_1km_cnt asc)/cnt as three_hospital_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.three_hospital_1km_cnt is null then 0 else t2.three_hospital_1km_cnt end asc)/cnt as three_hospital_1km_ranks,
     t2.hospital_1km_cnt,
     t2.hospital_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.hospital_1km_cnt asc)/cnt as hospital_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.hospital_1km_cnt is null then 0 else t2.hospital_1km_cnt end asc)/cnt as hospital_1km_ranks,
     t2.shopping_1km_cnt,
     t2.shopping_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.shopping_1km_cnt asc)/cnt as shopping_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.shopping_1km_cnt is null then 0 else t2.shopping_1km_cnt end asc)/cnt as shopping_1km_ranks,
     t2.greenland_1km_cnt,
     t2.greenland_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.greenland_1km_cnt asc)/cnt as greenland_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.greenland_1km_cnt is null then 0 else t2.greenland_1km_cnt end asc)/cnt as greenland_1km_ranks,
     t2.bus_1km_cnt,
     case when t2.bus_1km_name like '%;%' then concat(split(t2.bus_1km_name,';')[0],';',split(t2.bus_1km_name,';')[1])
         else t2.bus_1km_name end as bus_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.bus_1km_cnt asc)/cnt as bus_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.bus_1km_cnt is null then 0 else t2.bus_1km_cnt end asc)/cnt as bus_1km_ranks,
     t2.nursery_1km_cnt,
     t2.nursery_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.nursery_1km_cnt asc)/cnt as nursery_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.nursery_1km_cnt is null then 0 else t2.nursery_1km_cnt end asc)/cnt as nursery_1km_ranks,
     t2.primary_1km_cnt,
     t2.primary_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.primary_1km_cnt asc)/cnt as primary_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.primary_1km_cnt is null then 0 else t2.primary_1km_cnt end asc)/cnt as primary_1km_ranks,
     t2.middle_1km_cnt,
     t2.middle_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.middle_1km_cnt asc)/cnt as middle_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.middle_1km_cnt is null then 0 else t2.middle_1km_cnt end asc)/cnt as middle_1km_ranks,
     t2.supermarket_1km_cnt,
     t2.supermarket_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.supermarket_1km_cnt asc)/cnt as supermarket_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.supermarket_1km_cnt is null then 0 else t2.supermarket_1km_cnt end asc)/cnt as supermarket_1km_ranks,
     t2.movie_1km_cnt,
     t2.movie_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.movie_1km_cnt asc)/cnt as movie_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.movie_1km_cnt is null then 0 else t2.movie_1km_cnt end asc)/cnt as movie_1km_ranks,
     t2.coffee_1km_cnt,
     t2.coffee_1km_name,
-    rank() over (partition by t1.city_cd,t1.district_cd order by t2.coffee_1km_cnt asc)/cnt as coffee_1km_ranks,
+    rank() over (partition by t1.city_cd,t1.district_cd order by case when t2.coffee_1km_cnt is null then 0 else t2.coffee_1km_cnt end asc)/cnt as coffee_1km_ranks,
     t2.subway_nearby_distince
 from dw_evaluation.community_month_report_base_info t1
      left join wrk_evaluation.evaluation_community_mon_report_facilitate_03  t2
