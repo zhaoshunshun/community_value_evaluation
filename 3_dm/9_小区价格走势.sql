@@ -5,8 +5,8 @@ insert overwrite table dm_evaluation.community_month_price_report
     t1.district_cd,
     t1.district_name,
     t1.month,
-    case when t2.monthly_avg_price_desc is null then 0 else t2.monthly_avg_price_desc end as community_avg_price,
-    case when t3.monthly_avg_price_desc is null then 0 else t3.monthly_avg_price_desc end as district_avg_price,
+    t2.monthly_avg_price_desc as community_avg_price,
+    t3.monthly_avg_price_desc as district_avg_price,
     substring(cast(current_timestamp() as STRING), 1, 7)            as batch_no,
     current_timestamp()                             as timestamp_v --数据处理时间
 from (select t1.community_id, t1.district_cd, t1.district_name, t2.month_short_desc as month

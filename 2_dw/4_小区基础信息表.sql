@@ -54,7 +54,7 @@ select
          else concat(t1.build_min_year,'-',t1.build_max_year) end as building_year,
     t1.building_num,
     t1.build_area as building_area,
-    t1.house_num as room_num,
+    coalesce(t1.house_num,t5.cnt) as room_num,
     t1.property_type,
     udf.decryptudf(t1.property_fee) as property_fee,
     udf.decryptudf(t1.developer_corp) as developers,
@@ -87,6 +87,16 @@ left join wrk_evaluation.community_month_building_elevator t3
 on t1.community_id = t3.community_id
 left join  wrk_evaluation.community_month_building_block_elevator t4
 on t1.block_cd = t4.block_cd
+    left join (
+    select
+    community_id,
+    count(1) as cnt
+    from
+    eju_ods.ods_house_asset_room
+    where del_ind <> 1
+    group by community_id
+    ) t5
+    on t1.community_id = t5.community_id
 where t1.city_name in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
   and t1.del_ind <> 1
   and t1.upper_lower_ind = 1

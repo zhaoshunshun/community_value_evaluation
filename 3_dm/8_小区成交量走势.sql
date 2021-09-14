@@ -4,8 +4,8 @@ select t1.community_id,
     t1.district_cd,
     t1.district_name,
     t1.month,
-    case when t2.cnt is null then 0 else t2.cnt end as community_deal_cnt,
-    case when t3.cnt is null then 0 else t3.cnt end as district_deal_cnt,
+    t2.cnt as community_deal_cnt,
+    t3.cnt as district_deal_cnt,
     substring(cast(current_timestamp() as STRING), 1, 7)            as batch_no,
     current_timestamp()                             as timestamp_v --数据处理时间
 from (
