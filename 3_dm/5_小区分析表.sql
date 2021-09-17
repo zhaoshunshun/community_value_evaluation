@@ -57,7 +57,8 @@ from dw_evaluation.community_month_report_base_info t1
                    on t1.community_id = t5.community_id
          left join wrk_evaluation.community_month_building_block_elevator t6
                    on t1.block_cd = t6.block_cd
-                       --小区价格
+
+--小区价格
 truncate table wrk_evaluation.community_evaluation_month_analysis_02_01;
 drop table wrk_evaluation.community_evaluation_month_analysis_02_01;
 create table wrk_evaluation.community_evaluation_month_analysis_02_01
@@ -131,7 +132,7 @@ select
     t1.district_cd,
     rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) / t1.community_cnt  as community_rack_month_six,
     t2.district_rack_month_six,
-    rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) as community_price_rank,
+    rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) desc) as community_price_rank,
     t2.district_price_rank
 from wrk_evaluation.community_evaluation_month_analysis_02_01 t1
          left join (
@@ -139,7 +140,7 @@ from wrk_evaluation.community_evaluation_month_analysis_02_01 t1
         t1.city_cd,
         t1.district_cd,
         rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) / t1.district_cnt  as district_rack_month_six,
-        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) as district_price_rank
+        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) desc) as district_price_rank
     from wrk_evaluation.community_evaluation_month_analysis_02_02 t1
 ) t2 on t1.district_cd = t2.district_cd
 where t1.community_last_6_month_rate >=-0.3 and t1.community_last_6_month_rate <=0.3
@@ -514,13 +515,13 @@ select
          when t1.city_building_age_rate>=0.9 then 10 end as city_building_age_rate,
     case when t1.elevator_desc in ( 1,4) then '0' --没有
          when t1.elevator_desc = 5 then '10'   --有
-         when t1.elevator_desc in (3,6,8) then '5' --部分有
-         when t1.elevator_desc = 9 then null end --暂无数据
+         when t1.elevator_desc in (3,6,8,9) then '5' --部分有
+         else null end --暂无数据
         as elevator_desc,
     case when t1.block_elevator_desc in ( 1,4) then '0' --没有
          when t1.block_elevator_desc = 5 then '10'   --有
-         when t1.block_elevator_desc in (3,6,8)  then '5' --部分有
-         when t1.block_elevator_desc = 9 then null end --暂无数据
+         when t1.block_elevator_desc in (3,6,8,9)  then '5' --部分有
+         else null end --暂无数据
         as block_elevator_desc
 
 from wrk_evaluation.community_evaluation_month_analysis_01 t1

@@ -7,10 +7,10 @@ as
     from (
         select t1.community_id,
             case
-                when udf.decryptudf(t1.elevator_num) = '0'  then 1
-                when udf.decryptudf(t1.elevator_num) is null or t1.elevator_num is null then 3
+                when t1.elevator_num = '0'  then 1
+                when t1.elevator_num is null then 3
                 else 5 end as is_elevator
-        from ods_house.ods_house_asset_building t1
+        from eju_ods.ods_house_asset_building t1
         where del_ind <> 1
     ) t2 group by t2.community_id
 
@@ -22,16 +22,17 @@ insert overwrite table wrk_evaluation.community_month_building_block_elevator
 select t2.block_cd,
     sum(distinct t2.is_elevator) as is_elevator_type   --1: 无 2: 有 3:部分有
 from (
-    select t1.block_cd,
-           t1.community_id,
+    select t2.block_cd,
+        t1.community_id,
         case
-            when udf.decryptudf(t1.elevator_num) = '0'  then 1
-            when udf.decryptudf(t1.elevator_num) is null or t1.elevator_num is null then 3
+            when t1.elevator_num = '0'  then 1
+            when t1.elevator_num  is null then 3
             else 5 end as is_elevator
-    from ods_house.ods_house_asset_building t1
-    where del_ind <> 1
+    from eju_ods.ods_house_asset_building t1
+             inner join eju_ods.ods_house_asset_community t2
+                        on t1.community_id = t2.community_id
+    where t1.del_ind <> 1 and t2.del_ind <>1  and t2.upper_lower_ind = 1
 ) t2 group by t2.block_cd
-
 
 truncate table dw_evaluation.community_month_report_base_info;
 drop table dw_evaluation.community_month_report_base_info;
@@ -66,13 +67,13 @@ select
     substring(current_timestamp(),1,4) - t1.build_min_year as building_age,
     case when t3.is_elevator_type in ( 1,4) then '0' --没有
          when t3.is_elevator_type = 5 then '10'   --有
-         when t3.is_elevator_type in (3,6,8) then '5' --部分有
-         when t3.is_elevator_type = 9 then null end --暂无数据
+         when t3.is_elevator_type in (3,6,8,9) then '5' --部分有
+         else null end --暂无数据
         as elevator_desc,
     case when t4.is_elevator_type in ( 1,4) then '0' --没有
          when t4.is_elevator_type = 5 then '10'   --有
-         when t4.is_elevator_type in (3,6,8)  then '5' --部分有
-         when t4.is_elevator_type = 9 then null end --暂无数据
+         when t4.is_elevator_type in (3,6,8,9)  then '5' --部分有
+         else null end --暂无数据
     as block_elevator_desc,
        case when  t1.volume_rate is null then 0 else 1 end +
         case when t1.green_rate is null then 0 else 1 end +
