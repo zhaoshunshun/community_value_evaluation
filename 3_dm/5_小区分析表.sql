@@ -10,18 +10,18 @@ select
     t1.community_id,
     t1.city_name,
     t1.district_name,
-        rank() over (partition by t1.city_cd order by case when t1.volume_rate is null then 10000 else t1.volume_rate end desc)/t4.community_cnt as block_volume_rate,
-        rank() over (partition by t1.city_cd order by case when t1.green_rate is null then 0 else t1.green_rate end asc)/t4.community_cnt as block_green_rate,
+    cast(t2.block_volume_rate as decimal(10,6)) as block_volume_rate_value,
+    rank() over (partition by t1.city_cd order by case when t1.volume_rate is null then 10000 else t1.volume_rate end desc)/t4.community_cnt as block_volume_rate,
+    cast(t2.block_green_rate as decimal(10,6)) as block_green_rate_value,
+    rank() over (partition by t1.city_cd order by case when t1.green_rate is null then 0 else t1.green_rate end asc)/t4.community_cnt as block_green_rate,
     concat('1:',cast(cast(t2.block_parking_rate as decimal (10,6)) as STRING)) as block_parking_rate_value,
-        rank() over (partition by t1.city_cd order by case when split(t1.parking_rate,':')[1] is null then 0 else split(t1.parking_rate,':')[1] end asc)/t4.community_cnt as block_parking_rate,
+    rank() over (partition by t1.city_cd order by case when split(t1.parking_rate,':')[1] is null then 0 else split(t1.parking_rate,':')[1] end asc)/t4.community_cnt as block_parking_rate,
     cast(t2.block_building_age as decimal(10,6)) as block_building_age_value,
-        rank() over (partition by t1.city_cd order by case when t1.building_age is null then 10000 else t1.building_age end desc)/t4.community_cnt as block_building_age,
-        t2.city_volume_rate / t3.city_cnt as city_volume_rate,
-        t2.city_green_rate / t3.city_cnt as city_green_rate,
-        t2.city_parking_rate / t3.city_cnt as city_parking_rate,
-        t2.city_building_rate / t3.city_cnt as city_building_age_rate,
-    t5.is_elevator_type as elevator_desc,
-    t6.is_elevator_type as block_elevator_desc
+    rank() over (partition by t1.city_cd order by case when t1.building_age is null then 10000 else t1.building_age end desc)/t4.community_cnt as block_building_age,
+    t2.city_volume_rate / t3.city_cnt as city_volume_rate,
+    t2.city_green_rate / t3.city_cnt as city_green_rate,
+    t2.city_parking_rate / t3.city_cnt as city_parking_rate,
+    t2.city_building_rate / t3.city_cnt as city_building_age_rate
 from dw_evaluation.community_month_report_base_info t1
          left join (
     select city_cd,block_cd,
@@ -53,10 +53,7 @@ from dw_evaluation.community_month_report_base_info t1
     group by city_cd
 ) t4
                   on t1.city_cd = t4.city_cd
-         left join wrk_evaluation.community_month_building_elevator t5
-                   on t1.community_id = t5.community_id
-         left join wrk_evaluation.community_month_building_block_elevator t6
-                   on t1.block_cd = t6.block_cd
+
 
 --小区价格
 truncate table wrk_evaluation.community_evaluation_month_analysis_02_01;
@@ -69,9 +66,9 @@ select
     t2.city_cd,
     t2.district_cd,
     case
-        when cast((t1.current_price - t1.last_6_month_price) / t1.last_6_month_price as decimal(10, 6)) is not null
-            then cast((t1.current_price - t1.last_6_month_price) / t1.last_6_month_price as decimal(10, 6))
-        else null end as community_last_6_month_rate,
+        when cast((t1.current_price - t1.last_month_price) / t1.last_month_price as decimal(10, 6)) is not null
+            then cast((t1.current_price - t1.last_month_price) / t1.last_month_price as decimal(10, 6))
+        else null end as community_last_month_rate,
     t3.cnt as community_cnt
 from dw_evaluation.community_month_report_base_info t2
          left join dw_evaluation.community_avg_price_cal t1
@@ -94,10 +91,10 @@ select
     t1.city_cd,
     t1.district_cd,
     case
-        when cast((t1.district_avg_current_price - t1.district_avg_last_six_price) /
-                  t1.district_avg_last_six_price as decimal(10,6)) is not null then  cast((t1.district_avg_current_price - t1.district_avg_last_six_price) /
-                                                                                          t1.district_avg_last_six_price as decimal(10,6))
-        else null end as community_last_6_month_rate,
+        when cast((t1.district_avg_current_price - t1.district_avg_last_price) /
+                  t1.district_avg_last_price as decimal(10,6)) is not null then  cast((t1.district_avg_current_price - t1.district_avg_last_price) /
+                                                                                          t1.district_avg_last_price as decimal(10,6))
+        else null end as community_last_month_rate,
     t2.cnt as district_cnt
 from
     (
@@ -105,7 +102,7 @@ from
             t2.city_cd,
             t2.district_cd,
                 sum(case when t1.current_price <> 0 and t1.current_price is not null  then t1.current_price else 0 end)/sum(case when t1.current_price <> 0 and t1.current_price is not null then 1 else 0 end) as district_avg_current_price,
-                sum(case when t1.last_6_month_price <> 0 and t1.last_6_month_price is not null then t1.last_6_month_price else 0 end)/sum(case when t1.last_6_month_price <> 0 and t1.last_6_month_price is not null then 1 else 0 end) as district_avg_last_six_price
+                sum(case when t1.last_month_price <> 0 and t1.last_month_price is not null then t1.last_month_price else 0 end)/sum(case when t1.last_month_price <> 0 and t1.last_month_price is not null then 1 else 0 end) as district_avg_last_price
         from
             dw_evaluation.community_month_report_base_info t2
                 left join dw_evaluation.community_avg_price_cal t1
@@ -130,20 +127,21 @@ select
     t1.community_id,
     t1.city_cd,
     t1.district_cd,
-    rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end)  asc) / t1.community_cnt  as community_rack_month_six,
-    t2.district_rack_month_six,
-    rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) desc) as community_price_rank,
-    t2.district_price_rank
+    rank() over (partition by t1.city_cd order by (case when t1.community_last_month_rate is null then 0 else t1.community_last_month_rate end)  asc) / t1.community_cnt  as community_rack_month,
+    t2.district_rack_month,
+    rank() over (partition by t1.city_cd order by (case when t1.community_last_month_rate is null then 0 else t1.community_last_month_rate end) desc) as community_price_rank,
+    rank() over (partition by t1.district_cd order by (case when t1.community_last_month_rate is null then 0 else t1.community_last_month_rate end) desc) as district_price_rank,
+    t2.district_on_city_price_rank
 from wrk_evaluation.community_evaluation_month_analysis_02_01 t1
          left join (
     select
         t1.city_cd,
         t1.district_cd,
-        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) asc) / t1.district_cnt  as district_rack_month_six,
-        rank() over (partition by t1.city_cd order by (case when t1.community_last_6_month_rate is null then 0 else t1.community_last_6_month_rate end) desc) as district_price_rank
+        rank() over (partition by t1.city_cd order by (case when t1.community_last_month_rate is null then 0 else t1.community_last_month_rate end) asc) / t1.district_cnt  as district_rack_month,
+        rank() over (partition by t1.city_cd order by (case when t1.community_last_month_rate is null then 0 else t1.community_last_month_rate end) desc) as district_on_city_price_rank
     from wrk_evaluation.community_evaluation_month_analysis_02_02 t1
 ) t2 on t1.district_cd = t2.district_cd
-where t1.community_last_6_month_rate >=-0.3 and t1.community_last_6_month_rate <=0.3
+where t1.community_last_month_rate >=-0.2 and t1.community_last_month_rate <=0.2
 
 
 
@@ -256,7 +254,7 @@ group by t3.community_id
 
 
 
-    --小区价值变动分值
+--小区均价变动分值
 truncate table  wrk_evaluation.community_evaluation_month_analysis_07;
 drop table  wrk_evaluation.community_evaluation_month_analysis_07;
 create table wrk_evaluation.community_evaluation_month_analysis_07 as
@@ -265,28 +263,29 @@ select
     community_id,
     community_price_rank,
     district_price_rank,
-    case when community_rack_month_six <0.05 then 0
-         when community_rack_month_six>=0.05 and community_rack_month_six<0.1 then 1
-         when community_rack_month_six>=0.1 and community_rack_month_six<0.2 then 2
-         when community_rack_month_six>=0.2 and community_rack_month_six<0.3 then 3
-         when community_rack_month_six>=0.3 and community_rack_month_six<0.4 then 4
-         when community_rack_month_six>=0.4 and community_rack_month_six<0.5 then 5
-         when community_rack_month_six>=0.5 and community_rack_month_six<0.6 then 6
-         when community_rack_month_six>=0.6 and community_rack_month_six<0.7 then 7
-         when community_rack_month_six>=0.7 and community_rack_month_six<0.8 then 8
-         when community_rack_month_six>=0.8 and community_rack_month_six<0.9 then 9
-         when community_rack_month_six>=0.9 then 10 end as district_rack_month_six_score,
-    case when district_rack_month_six <0.05 then 0
-         when district_rack_month_six>=0.05 and district_rack_month_six<0.1 then 1
-         when district_rack_month_six>=0.1 and district_rack_month_six<0.2 then 2
-         when district_rack_month_six>=0.2 and district_rack_month_six<0.3 then 3
-         when district_rack_month_six>=0.3 and district_rack_month_six<0.4 then 4
-         when district_rack_month_six>=0.4 and district_rack_month_six<0.5 then 5
-         when district_rack_month_six>=0.5 and district_rack_month_six<0.6 then 6
-         when district_rack_month_six>=0.6 and district_rack_month_six<0.7 then 7
-         when district_rack_month_six>=0.7 and district_rack_month_six<0.8 then 8
-         when district_rack_month_six>=0.8 and district_rack_month_six<0.9 then 9
-         when district_rack_month_six>=0.9 then 10 end as city_rack_month_six_score
+    district_on_city_price_rank,
+    case when community_rack_month <0.05 then 0
+         when community_rack_month>=0.05 and community_rack_month<0.1 then 1
+         when community_rack_month>=0.1 and community_rack_month<0.2 then 2
+         when community_rack_month>=0.2 and community_rack_month<0.3 then 3
+         when community_rack_month>=0.3 and community_rack_month<0.4 then 4
+         when community_rack_month>=0.4 and community_rack_month<0.5 then 5
+         when community_rack_month>=0.5 and community_rack_month<0.6 then 6
+         when community_rack_month>=0.6 and community_rack_month<0.7 then 7
+         when community_rack_month>=0.7 and community_rack_month<0.8 then 8
+         when community_rack_month>=0.8 and community_rack_month<0.9 then 9
+         when community_rack_month>=0.9 then 10 end as district_rack_month_six_score,
+    case when district_rack_month <0.05 then 0
+         when district_rack_month>=0.05 and district_rack_month<0.1 then 1
+         when district_rack_month>=0.1 and district_rack_month<0.2 then 2
+         when district_rack_month>=0.2 and district_rack_month<0.3 then 3
+         when district_rack_month>=0.3 and district_rack_month<0.4 then 4
+         when district_rack_month>=0.4 and district_rack_month<0.5 then 5
+         when district_rack_month>=0.5 and district_rack_month<0.6 then 6
+         when district_rack_month>=0.6 and district_rack_month<0.7 then 7
+         when district_rack_month>=0.7 and district_rack_month<0.8 then 8
+         when district_rack_month>=0.8 and district_rack_month<0.9 then 9
+         when district_rack_month>=0.9 then 10 end as city_rack_month_six_score
 from wrk_evaluation.community_evaluation_month_analysis_02
 
     --小区成交量分值
@@ -301,6 +300,7 @@ select
     t2.cnt as deal_cnt,
     coalesce(case when t2.cnt is null or t1.room_num =0 then null else cast(t2.cnt / t1.room_num  as decimal (10,4)) end,0) as community_deal_rate,
     rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as community_deal_rank,
+    rank() over (partition by t1.district_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_deal_rank,
     t3.community_cnt
 from dw_evaluation.community_month_report_base_info t1
          left join
@@ -326,7 +326,7 @@ insert overwrite table wrk_evaluation.community_evaluation_month_analysis_08_02
 select  t1.city_cd,
     t1.district_cd,
     coalesce(case when t2.cnt is null or t1.cnt =0 then 0 else cast(t2.cnt / t1.cnt as decimal (10,4)) end,0) as deal_rate,
-    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_deal_rank,
+    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_on_city_deal_rank,
     t3.district_cnt
 from (select city_cd,district_cd, sum(room_num) as cnt
       from dw_evaluation.community_month_report_base_info
@@ -360,7 +360,8 @@ select
     t1.community_deal_rate,
     t2.deal_rate as district_deal_rate,
     t1.community_deal_rank,
-    t2.district_deal_rank,
+    t1.district_deal_rank,
+    t2.district_on_city_deal_rank,
     cast(rank() over (partition by t1.city_cd order by t1.community_deal_rate asc )/t1.community_cnt as decimal (10,4))       as city_rank,
     t2.district_rank
 from wrk_evaluation.community_evaluation_month_analysis_08_01 t1
@@ -368,7 +369,7 @@ from wrk_evaluation.community_evaluation_month_analysis_08_01 t1
     select t1.city_cd,
         t1.district_cd,
         t1.deal_rate,
-        t1.district_deal_rank,
+        t1.district_on_city_deal_rank,
         cast(rank() over (partition by t1.city_cd order by t1.deal_rate asc )/t1.district_cnt as decimal (10,4)) as district_rank
     from wrk_evaluation.community_evaluation_month_analysis_08_02 t1
 ) t2
@@ -390,6 +391,7 @@ select
     t1.deal_cnt,
     t1.community_deal_rank,
     t1.district_deal_rank,
+    t1.district_on_city_deal_rank,
     case when t1.city_rank <0.05 then 0
          when t1.city_rank>=0.05 and t1.city_rank<0.1 then 1
          when t1.city_rank>=0.1 and t1.city_rank<0.2 then 2
@@ -418,13 +420,16 @@ from wrk_evaluation.community_evaluation_month_analysis_08 t1
 
 
 --绿化率，容积率分值
-
+truncate table wrk_evaluation.community_evaluation_month_analysis_09;
+drop table wrk_evaluation.community_evaluation_month_analysis_09;
 create table  wrk_evaluation.community_evaluation_month_analysis_09 as
     insert overwrite table  wrk_evaluation.community_evaluation_month_analysis_09
 select
     t1.community_id,
     t1.block_parking_rate_value,
     t1.block_building_age_value,
+    t1.block_green_rate_value,
+    t1.block_volume_rate_value,
     case when t1.block_volume_rate <0.05 then 0
          when t1.block_volume_rate>=0.05 and t1.block_volume_rate<0.1 then 1
          when t1.block_volume_rate>=0.1 and t1.block_volume_rate<0.2 then 2
@@ -512,17 +517,7 @@ select
          when t1.city_building_age_rate>=0.6 and t1.city_building_age_rate<0.7 then 7
          when t1.city_building_age_rate>=0.7 and t1.city_building_age_rate<0.8 then 8
          when t1.city_building_age_rate>=0.8 and t1.city_building_age_rate<0.9 then 9
-         when t1.city_building_age_rate>=0.9 then 10 end as city_building_age_rate,
-    case when t1.elevator_desc in ( 1,4) then '0' --没有
-         when t1.elevator_desc = 5 then '10'   --有
-         when t1.elevator_desc in (3,6,8,9) then '5' --部分有
-         else null end --暂无数据
-        as elevator_desc,
-    case when t1.block_elevator_desc in ( 1,4) then '0' --没有
-         when t1.block_elevator_desc = 5 then '10'   --有
-         when t1.block_elevator_desc in (3,6,8,9)  then '5' --部分有
-         else null end --暂无数据
-        as block_elevator_desc
+         when t1.city_building_age_rate>=0.9 then 10 end as city_building_age_rate
 
 from wrk_evaluation.community_evaluation_month_analysis_01 t1
 
@@ -540,31 +535,33 @@ from wrk_evaluation.community_evaluation_month_analysis_01 t1
     t2.city_rank_score as mobility_score,
     t2.district_rank_score as district_mobility_score,
     t2.community_deal_rank,
-    t2.district_deal_rank,
+    t2.district_on_city_deal_rank as district_deal_rank,
+    t2.district_deal_rank as community_district_deal_cnt_rank,
     t2.city_rank as mobility,
     t2.district_rank as district_mobility,
     t3.district_rack_month_six_score as price_score,
     t3.city_rack_month_six_score as district_price_score,
-    cast((t11.current_price -  t11.last_6_month_price) / t11.current_price as decimal(10,4)) as rack_month_six,          --小区均价半年涨幅
-    cast((t12.current_price- t12.last_6_month_price) / t12.last_6_month_price  as decimal(10,4)) as district_rack_month_six,   --区域小区均价半年涨幅
+    cast((t11.current_price -  t11.last_month_price) / t11.current_price as decimal(10,4)) as rack_month_six,
+    cast((t12.current_price- t12.last_month_price) / t12.last_month_price  as decimal(10,4)) as district_rack_month_six,
     t3.community_price_rank as rack_month_six_rank,
-    t3.district_price_rank as district_rack_month_six_rank,
+    t3.district_on_city_price_rank as district_rack_month_six_rank,
+    t3.district_price_rank as community_district_rack_month_six_rank,
     t2.deal_cnt as deal_cnt,
     '' as living_score,
     case when t1.volume_rate in ('',null) then null else  t5.block_volume_rate end as volume_rate_score,
     t5.city_volume_rate as block_volume_rate_score,
+    t5.block_volume_rate_value as block_volume_rate,
     case when t1.green_rate in ('',null) then null else  t5.block_green_rate end as green_rate_score,
     t5.city_green_rate as block_green_rate_score,
+    t5.block_green_rate_value as block_green_rate,
     case when t1.parking_rate in ('',null) then null else  t5.block_parking_rate  end as parking_rate_score,
     t5.block_parking_rate_value as block_parking_rate,
     t5.city_parking_rate as block_parking_rate_score,
     case when t1.building_age in ('',null) then null else  t5.block_building_age end as building_age_score,
     t5.block_building_age_value as block_building_rate,
     t5.city_building_age_rate as block_building_score,
-    case when t5.elevator_desc is not null then t5.elevator_desc
-         else null end as elevator_score,
-    case when t5.block_elevator_desc is not null then t5.block_elevator_desc
-         else null end as block_elevator_score,
+    null as elevator_score,
+    null as block_elevator_score,
     t6.community_id_list as around_community_id_list,
     '' as block_same_community_id,
     '' as city_smme_community_id,

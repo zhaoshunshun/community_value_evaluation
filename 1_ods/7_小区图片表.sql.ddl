@@ -12,6 +12,7 @@ CREATE TABLE case_esf.caishen_photo_for_tmall
     pre_pic_md5 STRING COMMENT '原图图片MD5',
     is_test     INT COMMENT '是否测试数据',
     create_time STRING COMMENT '创建时间',
-    update_time STRING COMMENT '更新时间'
+    update_time STRING COMMENT '更新时间',
+    ori_pic_data STRING COMMENT '图片url_org'
 ) COMMENT '小区图片数据'
     STORED AS TEXTFILE;

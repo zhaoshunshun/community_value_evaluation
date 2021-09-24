@@ -105,7 +105,7 @@ group by t1.community_id,
     t2.block_name
 
 
---近6个月没有的，就继续往前推6个月，当月没有的，就取上个月，上个月也没有的，就取最近一个月的 如果全部没有，且数据不满6个月的，就不出报告 --朱骊
+--近6个月没有的，就继续往前推6个月，当月没有的，就取上个月，上个月也没有的，就取最近一个月的如果全部没有，且数据不满6个月的，就不出报告 --朱骊
 
 truncate table dw_evaluation.community_rack_avg_price
 drop table dw_evaluation.community_rack_avg_price

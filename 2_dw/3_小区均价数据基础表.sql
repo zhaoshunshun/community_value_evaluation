@@ -11,8 +11,7 @@ select
     community_id,
     community_name,
     coalesce(price_1,price_2,price_3,price_4,price_5,price_6) as current_price,
-    coalesce(price_2,price_3,price_4,price_5,price_6,price_1) as last_month_price,
-    coalesce(price_6,price_5,price_4,price_3,price_2,price_1) as last_6_month_price
+    coalesce(price_2,price_3,price_4,price_5,price_6,price_1) as last_month_price
 from (
     select
         city_cd,
@@ -39,7 +38,6 @@ from (
         t1.biz_time,
         t1.monthly_avg_price_desc,
         row_number() over(partition by t2.city_name,t1.outer_id order by t1.biz_time desc ) as ranks
-
         from wrk_house.esf_price_6_mth t1
         inner join ods_house.ods_house_asset_community t2
         on t1.outer_id = t2.community_id
@@ -67,14 +65,16 @@ select
     city_name,
     district_cd,
     cast(sum(case when current_price <> 0 then current_price else 0 end )/sum(case when current_price <> 0 then 1 else 0 end) as DECIMAL(13,2))  as current_price,
-    cast(sum(case when last_6_month_price <> 0 then last_6_month_price else 0 end )/sum(case when last_6_month_price <> 0 then 1 else 0 end) as DECIMAL(13,2)) as last_6_month_price
+    cast(sum(case when last_month_price <> 0 then last_month_price else 0 end )/sum(case when last_month_price <> 0 then 1 else 0 end) as DECIMAL(13,2)) as last_month_price
 from dw_evaluation.community_avg_price_cal
 group by
     city_cd,
     city_name,
     district_cd
 
---小区明细
+--房源明细
+truncate table dw_evaluation.community_avg_price_detail;
+drop table dw_evaluation.community_avg_price_detail;
 create table dw_evaluation.community_avg_price_detail
     as
     insert overwrite table dw_evaluation.community_avg_price_detail
@@ -94,9 +94,9 @@ left join (
     select
     community_id,
     case
-        when cast((t1.current_price - t1.last_6_month_price) / t1.last_6_month_price as decimal(10, 6)) is not null
-            then cast((t1.current_price - t1.last_6_month_price) / t1.last_6_month_price as decimal(10, 6))
-        else null end as community_last_6_month_rate
+        when cast((t1.current_price - t1.last_month_price) / t1.last_month_price as decimal(10, 6)) is not null
+            then cast((t1.current_price - t1.last_month_price) / t1.last_month_price as decimal(10, 6))
+        else null end as community_last_month_rate
     from dw_evaluation.community_avg_price_cal t1
     ) t3
 on t1.outer_id = t3.community_id
@@ -105,4 +105,4 @@ where t2.del_ind <> 1
   and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
 and t1.biz_time >=substring(cast(add_months(current_timestamp(), -6) as string), 1, 7)
 and t1.biz_time <=substring(cast(add_months(current_timestamp(), -1) as string), 1, 7)
-and t3.community_last_6_month_rate>=-0.3 and t3.community_last_6_month_rate <=0.3
+and t3.community_last_month_rate>=-0.2 and t3.community_last_month_rate <=0.2
