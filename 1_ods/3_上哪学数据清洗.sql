@@ -28,7 +28,7 @@ from (
         t1.area_name as district_name,
         concat(t1.longitude,',',t1.latitude) as coordinate,
         t1.characteristic as school_desc,
-        t1.enrollment_area as school_scope_road,
+        udf.emojiclean(t1.enrollment_area) as school_scope_road,
         t1.enrollment_target as school_enrollment_target,
         t1.address as school_addr,
         t1.name as school_name,
@@ -38,7 +38,7 @@ from (
         t1.segment_grade_name as school_segment_grade,
         t1.tuition_content as school_fee,
         t1.characteristics as school_characteristics,
-            row_number() over (partition by t1.school_id order by t1.dt asc)  as ranks
+            row_number() over (partition by t1.school_id order by t1.dt desc)  as ranks
         from ods_house.ods_shangnaxue_school  t1
     where t1.segment_grade_name <> '托育园'
     )  t2

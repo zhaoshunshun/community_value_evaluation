@@ -33,6 +33,3 @@ where (length(t1.head_strategy_resume) > 2
    or length(t1.head_average_price) > 2 )
 and t1.ranks = 1
 ;
-
-
-

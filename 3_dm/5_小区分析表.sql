@@ -299,8 +299,8 @@ select
     t1.district_cd,
     t2.cnt as deal_cnt,
     coalesce(case when t2.cnt is null or t1.room_num =0 then null else cast(t2.cnt / t1.room_num  as decimal (10,4)) end,0) as community_deal_rate,
-    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as community_deal_rank,
-    rank() over (partition by t1.district_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_deal_rank,
+    rank() over (partition by t1.city_cd order by coalesce(case when t2.cnt is null or t1.room_num =0 then null else cast(t2.cnt / t1.room_num  as decimal (10,4)) end,0) desc) as community_deal_rank,
+    rank() over (partition by t1.district_cd order by coalesce(case when t2.cnt is null or t1.room_num =0 then null else cast(t2.cnt / t1.room_num  as decimal (10,4)) end,0) desc) as district_deal_rank,
     t3.community_cnt
 from dw_evaluation.community_month_report_base_info t1
          left join
@@ -326,7 +326,7 @@ insert overwrite table wrk_evaluation.community_evaluation_month_analysis_08_02
 select  t1.city_cd,
     t1.district_cd,
     coalesce(case when t2.cnt is null or t1.cnt =0 then 0 else cast(t2.cnt / t1.cnt as decimal (10,4)) end,0) as deal_rate,
-    rank() over (partition by t1.city_cd order by (case when t2.cnt is null then 0 else t2.cnt end ) desc) as district_on_city_deal_rank,
+    rank() over (partition by t1.city_cd order by coalesce(case when t2.cnt is null or t1.cnt =0 then 0 else cast(t2.cnt / t1.cnt as decimal (10,4)) end,0) desc) as district_on_city_deal_rank,
     t3.district_cnt
 from (select city_cd,district_cd, sum(room_num) as cnt
       from dw_evaluation.community_month_report_base_info
