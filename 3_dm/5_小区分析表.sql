@@ -541,7 +541,7 @@ from wrk_evaluation.community_evaluation_month_analysis_01 t1
     t2.district_rank as district_mobility,
     t3.district_rack_month_six_score as price_score,
     t3.city_rack_month_six_score as district_price_score,
-    cast((t11.current_price -  t11.last_month_price) / t11.current_price as decimal(10,4)) as rack_month_six,
+    cast((t11.current_price -  t11.last_month_price) / t11.last_month_price as decimal(10,4)) as rack_month_six,
     cast((t12.current_price- t12.last_month_price) / t12.last_month_price  as decimal(10,4)) as district_rack_month_six,
     t3.community_price_rank as rack_month_six_rank,
     t3.district_on_city_price_rank as district_rack_month_six_rank,
@@ -603,4 +603,4 @@ left join dw_evaluation.community_avg_price_cal t11
 on t1.community_id = t11.community_id
 left join dw_evaluation.community_avg_price_district_cal t12
 on t1.city_cd = t12.city_cd
-    and t1.district_cd = t12.district_cd
+and t1.district_cd = t12.district_cd
