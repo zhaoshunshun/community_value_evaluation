@@ -60,6 +60,9 @@ create table dm_evaluation.community_month_report_analysis
         layout_main_area STRING COMMENT '小区主要户型面积',
         layout_secondary STRING COMMENT '小区次要户型',
         layout_least STRING COMMENT '小区最少户型',
+        nearby_school_id STRING COMMENT '最近学校id',
+        nearby_1000_school_list STRING COMMENT '小区附近1000米学校idlist',
+        nearby_3000_school_list STRING COMMENT '小区附近3000米学校idlist',
         batch_no STRING COMMENT '批次号',
         timestamp_v timestamp COMMENT '数据处理时间'
 ) COMMENT '小区分析指标表'  STORED AS TEXTFILE;

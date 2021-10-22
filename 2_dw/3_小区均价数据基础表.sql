@@ -43,7 +43,7 @@ from (
         on t1.outer_id = t2.community_id
         where  t2.del_ind <> 1
         and t2.upper_lower_ind = 1
-        and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
+        and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波','佛山')
         ) t2
     group by
         city_cd,
@@ -102,7 +102,7 @@ left join (
 on t1.outer_id = t3.community_id
 where t2.del_ind <> 1
   and t2.upper_lower_ind = 1
-  and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
+  and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波','佛山')
 and t1.biz_time >=substring(cast(add_months(current_timestamp(), -6) as string), 1, 7)
 and t1.biz_time <=substring(cast(add_months(current_timestamp(), -1) as string), 1, 7)
 and t3.community_last_month_rate>=-0.2 and t3.community_last_month_rate <=0.2

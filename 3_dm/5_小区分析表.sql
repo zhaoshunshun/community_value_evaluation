@@ -521,6 +521,48 @@ select
 
 from wrk_evaluation.community_evaluation_month_analysis_01 t1
 
+create table wrk_evaluation.community_evaluation_school_01 as
+    insert overwrite table wrk_evaluation.community_evaluation_school_01
+    select     t1.community_id,
+               t1.nearby_3000_school_list,
+               t2.nearby_1000_school_list,
+               t3.nearby_school_id
+           from
+               (
+select community_id,
+    concat_ws(',', collect_set(school_id)) as nearby_3000_school_list
+        from
+    (
+        select community_id,
+               school_id,
+               community_school_distince
+        from dw_evaluation.community_evaluation_community_school_map
+        order by community_id,community_school_distince asc) t2 group by community_id
+    ) t1
+left join
+                (
+                    select community_id,
+                           concat_ws(',', collect_set(school_id)) as nearby_1000_school_list
+                    from (
+                             select community_id,
+                                    school_id,
+                                    community_school_distince
+                             from dw_evaluation.community_evaluation_community_school_map
+                             where community_school_distince <= 1000
+                             order by community_id, community_school_distince asc
+                         ) t2
+                    group by community_id
+                ) t2 on t1.community_id=t2.community_id
+left join (
+               select community_id,
+                      school_id as nearby_school_id,
+                      row_number() over(partition by community_id order by community_school_distince asc) as ranks
+               from dw_evaluation.community_evaluation_community_school_map
+               where school_fance <> '[]'
+           ) t3
+    on t1.community_id = t3.community_id and t3.ranks =1
+
+
 
 
 
@@ -584,6 +626,9 @@ from wrk_evaluation.community_evaluation_month_analysis_01 t1
     concat(t10.main_area_min,'-',t10.main_area_max)  as layout_main_area,
     coalesce(t10.second_layout,'其他') as layout_secondary,
     coalesce(t10.last_layout,'其他') as layout_least,
+    t13.nearby_school_id,
+    t13.nearby_1000_school_list,
+    t13.nearby_3000_school_list,
     substring(current_timestamp(),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_month_report_base_info t1
@@ -604,3 +649,5 @@ on t1.community_id = t11.community_id
 left join dw_evaluation.community_avg_price_district_cal t12
 on t1.city_cd = t12.city_cd
 and t1.district_cd = t12.district_cd
+left join wrk_evaluation.community_evaluation_school_01 t13
+on t1.community_id = t13.community_id

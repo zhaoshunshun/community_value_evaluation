@@ -1,3 +1,6 @@
+
+truncate table dm_evaluation.community_month_report_school;
+drop table dm_evaluation.community_month_report_school;
 create table dm_evaluation.community_month_report_school
 (
     community_id STRING COMMENT '小区id',

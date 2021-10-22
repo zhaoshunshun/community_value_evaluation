@@ -50,7 +50,7 @@ on t1.community_id = t2.community_id
     group by community_id
     ) t5
     on t1.community_id = t5.community_id
-where t1.city_name in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波')
+where t1.city_name in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波','佛山')
   and t1.del_ind <> 1
   and t1.upper_lower_ind = 1
   and t2.community_id is null
