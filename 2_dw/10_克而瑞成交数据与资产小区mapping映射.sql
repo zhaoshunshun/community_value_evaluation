@@ -54,7 +54,7 @@ from ods_evaluation.bk_deal_detail t1
                         and t2.source_info_src = 'BK'
          left join ods_house.ods_house_asset_community t3
                    on t2.community_id= t3.community_id
-where t3.city_name in ('沈阳','济南','厦门','昆明','宁波','佛山','无锡','成都')
+where t3.city_name in ('沈阳','济南','厦门','昆明','宁波','佛山','无锡','成都','深圳','福州','南宁','长沙','南昌','银川','中山','兰州','长春','贵阳','徐州','石家庄','惠州')
   and t3.del_ind <> 1
   and t3.upper_lower_ind = 1
 and t1.deal_date >= add_months(current_timestamp(),-13)
@@ -84,7 +84,7 @@ from wrk_evaluation.community_evaluation_deal_ajk_pre t1
                         and t2.source_info_src = 'AJK'
          left join ods_house.ods_house_asset_community t3
                    on t2.community_id= t3.community_id
-where t3.city_name in ('沈阳','济南','厦门','昆明','宁波','佛山','无锡','成都')
+where t3.city_name in ('沈阳','济南','厦门','昆明','宁波','佛山','无锡','成都','深圳','福州','南宁','长沙','南昌','银川','中山','兰州','长春','贵阳','徐州','石家庄','惠州')
   and t3.del_ind <> 1
   and t3.upper_lower_ind = 1
   and t1.ranks=1

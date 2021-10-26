@@ -38,6 +38,11 @@ create table if not exists ods_evaluation.ods_community_evaluation_community_mon
 STORED AS TEXTFILE
 
 
+create table ods_evaluation.ods_community_evaluation_community_mon_report_facilitate_bak
+    as select * from ods_evaluation.ods_community_evaluation_community_mon_report_facilitate
+
+create table ods_evaluation.ods_community_evaluation_community_mon_district_crawl_data_bak
+    as select * from ods_evaluation.ods_community_evaluation_community_mon_district_crawl_data
 
 type-map:
   typeMaps:
