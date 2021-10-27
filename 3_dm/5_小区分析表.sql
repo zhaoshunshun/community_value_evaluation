@@ -600,7 +600,7 @@ left join (
     t5.block_parking_rate_value as block_parking_rate,
     t5.city_parking_rate as block_parking_rate_score,
     case when t1.building_age in ('',null) then null else  t5.block_building_age end as building_age_score,
-    t5.block_building_age_value as block_building_rate,
+    cast(cast(t5.block_building_age_value as decimal(10,2)) as String) as block_building_rate,
     t5.city_building_age_rate as block_building_score,
     null as elevator_score,
     null as block_elevator_score,
