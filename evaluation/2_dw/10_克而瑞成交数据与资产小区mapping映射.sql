@@ -20,6 +20,8 @@ select
     t2.trademoney as deal_price,
     t2.tradearea as deal_area,
     t2.new_tradedate as deal_date,
+    'cric' as info_src,
+    t2.create_time,
     current_timestamp() as timestamp_v
     from ods_evaluation.cric_deal_detail t2
          inner join ods_house.ods_house_asset_community t3
@@ -46,6 +48,8 @@ select
     t1.total_price as deal_price,
     t1.area as deal_area,
     t1.deal_date as deal_date,
+    'bk' as info_src,
+    '' as create_time,
     current_timestamp() as timestamp_v
 from ods_evaluation.bk_deal_detail t1
          inner join case_esf.community_source_map t2
@@ -76,6 +80,8 @@ select
     cast(regexp_replace(t1.deal_total_price,'万','') as decimal(11,2)) as deal_price,
     regexp_replace(t1.area,'m²','') as deal_area,
     t1.deal_time as deal_date,
+    'ajk' as info_src,
+    '' as create_time,
     current_timestamp() as timestamp_v
 from wrk_evaluation.community_evaluation_deal_ajk_pre t1
          inner join case_esf.community_source_map t2
