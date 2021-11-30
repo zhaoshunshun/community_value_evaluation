@@ -9,4 +9,4 @@ area String COMMENT '面积',
 total_price String COMMENT '总价',
 avg_price String COMMENT '单价',
 timestamp_v String COMMENT '数据处理时间'
-)OMMENT '同面积成交挂牌案例' STORED AS TEXTFILE;
+)COMMENT '同面积成交挂牌案例' STORED AS TEXTFILE;

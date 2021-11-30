@@ -1,5 +1,6 @@
 create table ods_evaluation.house_valuation_bk_interval
 as
+    insert overwrite table  ods_evaluation.house_valuation_bk_interval
 select
     id,
     city_name,

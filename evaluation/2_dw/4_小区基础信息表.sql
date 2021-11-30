@@ -38,8 +38,6 @@ select
         case when cast(substring(current_timestamp(),1,4) - round((t1.build_min_year+t1.build_max_year)/2) as STRING) is null then 0 else 1 end as score,
     current_timestamp() as timestamp_v
 from eju_ods.ods_house_asset_community t1
-left join ods_evaluation.ods_community_evaluation_community_month_reference_price t2    --剔除参考价数据
-on t1.community_id = t2.community_id
     left join (
     select
     community_id,
@@ -53,7 +51,6 @@ on t1.community_id = t2.community_id
 where t1.city_name in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波','佛山','深圳','福州','南宁','长沙','南昌','银川','中山','兰州','长春','贵阳','徐州','石家庄','惠州')
   and t1.del_ind <> 1
   and t1.upper_lower_ind = 1
-  and t2.community_id is null
 and t1.block_cd <> ''
 
 

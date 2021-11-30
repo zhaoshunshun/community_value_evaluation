@@ -1,3 +1,6 @@
+
+truncate table dm_evaluation.house_valuation_floor;
+drop table dm_evaluation.house_valuation_floor;
 create table dm_evaluation.house_valuation_floor(
 city_cd String COMMENT '城市编码',
 city_name String COMMENT '城市名称',
@@ -15,6 +18,8 @@ building_name String COMMENT '楼栋名称',
 highest_floor String COMMENT '楼层',
 building_age String COMMENT '楼龄',
 avg_price String COMMENT '小区均价',
+building_year String COMMENT '建筑年代',
+subway_dis String COMMENT '距离地铁距离',
 timestamp_v String COMMENT '数据处理时间'
 )COMMENT '前端录入表'  STORED AS TEXTFILE;
 

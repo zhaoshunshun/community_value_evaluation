@@ -1,8 +1,6 @@
-
 create table dm_evaluation.house_valuation_analysis_same_community_detail(
 goods_id String COMMENT '房源id',
 community_id String COMMENT '小区id',
-building_id String COMMENT '楼栋id',
 city_name String COMMENT '城市名称',
 district_name String COMMENT '区域名称',
 layout String COMMENT '户型',

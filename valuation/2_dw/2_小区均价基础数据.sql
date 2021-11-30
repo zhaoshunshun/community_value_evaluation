@@ -1,4 +1,5 @@
 create table dw_evaluation.house_valuation_community_month_price as
+    insert overwrite table dw_evaluation.house_valuation_community_month_price
 select
     t2.city_cd,
     t2.city_name,
@@ -19,6 +20,7 @@ where  t2.del_ind <> 1
   and t2.city_name  in  ('北京','天津','上海','成都','重庆','苏州','无锡','杭州','南京','郑州','合肥','沈阳','昆明','西安','厦门','济南','武汉','广州','宁波','佛山','深圳','福州','南宁','长沙','南昌','银川','中山','兰州','长春','贵阳','徐州','石家庄','惠州')
 
 create table dw_evaluation.house_valuation_district_month_price as
+    insert overwrite table dw_evaluation.house_valuation_district_month_price
 select district_cd,
        biz_time,
        sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/count(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as district_avg_price,
@@ -28,6 +30,7 @@ group by district_cd,biz_time
 
 
 create table dw_evaluation.house_valuation_block_month_price as
+    insert overwrite table dw_evaluation.house_valuation_block_month_price
 select block_cd,
        biz_time,
        sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/count(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as block_avg_price,

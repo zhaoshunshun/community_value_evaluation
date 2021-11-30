@@ -26,9 +26,11 @@ on t1.block_cd = t3.block_cd and t3.ranks =1
 left join dw_evaluation.house_valuation_district_month_price t4
 on t1.district_cd = t4.district_cd and t4.ranks =1
 left join (
-    select block_cd,count(1) as block_rack_cnt,percentile_approx(house_avg_price,0.5) as block_median_rack_price  from dw_evaluation.house_valuation_rack_detail where month_dt = substring(current_date(),1,7) group by block_cd
+    select block_cd,
+           count(1) as block_rack_cnt,
+           percentile_approx(house_avg_price,0.5) as block_median_rack_price
+        from dw_evaluation.house_valuation_rack_detail where month_dt = substring(current_date(),1,7) group by block_cd
     ) t5 on t1.block_cd = t5.block_cd
-on t1.block_cd = t5.block_cd
 left join (
 select block_cd,
         count(1) as block_community_cnt,
