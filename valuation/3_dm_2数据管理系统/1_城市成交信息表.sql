@@ -8,7 +8,7 @@ t1.city_name,
 sum(case when t1.avg_price is not null  then t1.avg_price else 0 end) / count(case when t1.avg_price is not null  then 1 else 0 end) as avg_price,
 count(1) as deal_cnt,
 count(distinct t1.community_id) as deal_community_cnt,
-count(distinct t1.agency_name) as deal_agency_cnt,
+count(distinct case when t1.agency_name ='' then null else t1.agency_name end ) as deal_agency_cnt,
 row_number() over(partition by city_cd order by substring(t1.deal_date,1,7) desc) as ranks
 from dw_evaluation.house_valuation_month_deal t1
 where t1.deal_month >=substring(add_months(current_timestamp(),-7),1,7)
