@@ -2,8 +2,9 @@
 
 insert overwrite table dm_evaluation.house_valuation_analysis_same_community_detail
 select
-t1.rack_house_id,
+t1.rack_house_id as goods_id,
 t1.community_id,
+'' as building_id,
 t1.city_name,
 t1.district_name,
 t1.house_layout as layout,
@@ -17,7 +18,9 @@ t2.building_year as building_year,
 t1.house_fitment_name as fitment,
 t1.elevator as elevator,
 t1.ladder_ratio as elevator_desc,
+'' as subway_dis,
 current_timestamp() as timestamp_v
 from dw_evaluation.house_valuation_rack_detail t1
 left join dw_evaluation.house_valuation_community_detail t2
 on t1.community_id = t2.community_id
+where t1.month_dt >=substring(add_months(current_timestamp(),-7),1,7)

@@ -1,6 +1,6 @@
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_01
-    as
+
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_01
     select
 t1.month_dt,
 t1.community_id,
@@ -18,8 +18,7 @@ group by
     t1.block_cd,
     t1.bk_interval
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_0101
-as
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_0101
     select
         t1.month_dt,
         t1.community_id,
@@ -42,8 +41,7 @@ left join wrk_evaluation.house_valuation_analysis_same_community_report_01 t3
 
 
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_02
-as
+
     insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_02
 select
     t1.month_dt,
@@ -58,8 +56,8 @@ group by
 
 
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_03
-as
+
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_03
     select
     t1.deal_month as month_dt,
     t1.community_id,
@@ -75,8 +73,7 @@ group by
     t1.bk_interval
 
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_0301
-as
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_0301
 select
     t1.month_dt,
     t1.community_id,
@@ -96,8 +93,7 @@ left join wrk_evaluation.house_valuation_analysis_same_community_report_03 t3
               and t1.bk_interval = t3.bk_interval
 
 
-create table wrk_evaluation.house_valuation_analysis_same_community_report_04
-as
+insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_report_04
 select
     t1.deal_month as month_dt,
     t1.block_cd,
@@ -113,7 +109,7 @@ group by
 
 
 
-insert into table dm_evaluation.house_valuation_analysis_same_community_report
+insert overwrite  table dm_evaluation.house_valuation_analysis_same_community_report
 select
     t1.month_dt,
     t1.community_id,

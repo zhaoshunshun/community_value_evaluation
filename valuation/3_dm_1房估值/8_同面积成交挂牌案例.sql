@@ -1,6 +1,7 @@
 
 
 create table wrk_evaluation.house_valuation_analysis_same_community_case_01 as
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_case_01
 select
     community_id,
     bk_interval,
@@ -15,6 +16,7 @@ from dw_evaluation.house_valuation_rack_detail
 truncate table wrk_evaluation.house_valuation_analysis_same_community_case_02;
 drop table wrk_evaluation.house_valuation_analysis_same_community_case_02;
 create table wrk_evaluation.house_valuation_analysis_same_community_case_02 as
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_case_02
 select
     community_id,
     bk_interval,
@@ -24,14 +26,14 @@ select
     deal_price,
     avg_price,
     row_number() over(partition by community_id order by deal_date desc) as ranks
-from dw_evaluation.house_valuation_month_deal
+from dw_evaluation.house_valuation_month_deal t1
     where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
 
-insert overwrite table dm_evaluation.house_valuation_analysis_same_community_case
+insert overwrite table dm_evaluation.house_valuation_analysis_same_community_deal
 select
 t1.community_id,
 t1.bk_interval as area_interval,
-'挂牌' as type,
+'1' as type, --挂牌
 dt as date,
 t1.house_layout as layout,
 t1.house_property_area as area,
@@ -43,11 +45,11 @@ where t1.ranks <=5
 
 
 
-insert into table  dm_evaluation.house_valuation_analysis_same_community_case
+insert into table  dm_evaluation.house_valuation_analysis_same_community_deal
 select
 t1.community_id,
 t1.bk_interval as area_interval,
-'成交' as type,
+'2' as type,   -- 成交
 t1.deal_date as date,
 t1.layout as layout,
 t1.deal_area as area,

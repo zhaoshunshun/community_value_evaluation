@@ -169,9 +169,9 @@ select
     region,
     title,
     '凶宅' as event_type,
-    xiongzhai as coordinate,
+    '' as coordinate,
     name as event_desc,
-    '' as event_time,
+    xiongzhai as event_time,
     current_timestamp() as timestamp_v
 from dw_evaluation.house_valuation_analysis_same_community_sensitive_03 where name <> ''
 

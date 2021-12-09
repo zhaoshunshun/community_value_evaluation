@@ -15,7 +15,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t3.block_name,
         cast(t2.trademoney/t2.tradearea as int) as avg_price,
         t2.trademoney as deal_price,
-        t2.tradearea as deal_area,
+        cast(t2.tradearea as decimal(10,2)) as deal_area,
         t2.new_tradedate as deal_date,
         regexp_replace(t2.room_type,'房','') as layout,
         t2.developer  as agency_name,
@@ -47,7 +47,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t3.block_name,
         cast(trim(t1.unit_price) as int) as avg_price,
         t1.total_price as deal_price,
-        t1.area as deal_area,
+        cast(t1.area as decimal(10,2)) as deal_area,
         t1.deal_date as deal_date,
         t1.community_layout as layout,
         '' as agency_name,
@@ -89,7 +89,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t3.block_name,
         regexp_replace(t1.deal_average_price,'元/m²','') as avg_price,
         cast(regexp_replace(t1.deal_total_price,'万','') as decimal(11,2)) as deal_price,
-        regexp_replace(t1.area,'m²','') as deal_area,
+        cast(regexp_replace(t1.area,'m²','') as decimal(10,2)) as deal_area,
         t1.deal_time as deal_date,
         t1.layout,
         '' as agency_name,
@@ -143,8 +143,8 @@ create table wrk_evaluation.house_valuation_month_deal as
     from wrk_evaluation.house_valuation_month_deal t1
     left join ods_evaluation.house_valuation_bk_interval t2
               on t1.city_name = t2.city_name
-    where t1.deal_area > t2.min_interval
-      and t1.deal_area < t2.max_interval
+    where cast(t1.deal_area as decimal(10,2)) > cast(t2.min_interval as decimal(10,2))
+      and cast(t1.deal_area as decimal(10,2)) <= cast(t2.max_interval as decimal(10,2))
 
 
     truncate table dw_evaluation.house_valuation_deal_community_area_interval

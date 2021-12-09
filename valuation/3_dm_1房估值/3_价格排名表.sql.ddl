@@ -1,7 +1,7 @@
 
 create table dm_evaluation.house_valuation_analysis_goods_rank(
 goods_id String COMMENT '房源id',
-goods_price String COMMENT '房源挂牌价格',
+goods_price String COMMENT '房源挂单价牌价',
 community_id String COMMENT '小区id',
 block_cd String COMMENT '板块id',
 community_avg_price String COMMENT '小区均价',

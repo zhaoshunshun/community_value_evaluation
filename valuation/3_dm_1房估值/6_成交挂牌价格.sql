@@ -1,22 +1,26 @@
 
 create table wrk_evaluation.house_valuation_analysis_same_community_price_01 as
+
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_price_01
     select
         t1.rack_house_id as goods_id,
-        '挂牌' as type,
+        '1' as type,
         t1.community_id,
         t1.bk_interval as area_interval,
         t1.house_avg_price as rack_price,
         t2.community_rack_cnt,
-        rank() over(partition by t1.community_id,t1.area_interval order by t1.house_avg_price asc) as community_goods_rank
+        rank() over(partition by t1.community_id,t1.bk_interval order by t1.house_avg_price asc) as community_goods_rank
 from dw_evaluation.house_valuation_rack_detail t1
 left join (
     select community_id,count(1) as community_rack_cnt
            from dw_evaluation.house_valuation_rack_detail
     where month_dt >= substring(add_months(concat(month_dt,'-01'),-6),1,7)
+    group by community_id
     ) t2
 on t1.community_id  = t2.community_id
 
 create table wrk_evaluation.house_valuation_analysis_same_community_price_03 as
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_price_03
 select community_id,
        block_cd,
        bk_interval as area_interval,
@@ -27,9 +31,11 @@ group by community_id,block_cd,bk_interval
 
 
 create table wrk_evaluation.house_valuation_analysis_same_community_price_02 as
+
+    insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_price_02
     select
 '' as goods_id,
-'成交' as type,
+'2' as type,
 t1.community_id,
 t1.bk_interval as area_interval,
 t1.avg_price as deal_price,
@@ -49,22 +55,22 @@ left join (
     select
         community_id,
         area_interval,
-        rank() over(partotion by block_cd,bk_interval order by avg_price asc) as community_deal_rank
+        rank() over(partition by block_cd,area_interval order by avg_price asc) as community_deal_rank
     from wrk_evaluation.house_valuation_analysis_same_community_price_03
     )  t3
 on t1.community_id = t3.community_id
        and t1.bk_interval = t3.area_interval
-       and t1.block_cd = t3.block_cd
 left join (
     select
-    block_cd,
+    community_id,
     area_interval,
     percentile_approx(avg_price,0.5) as community_deal_med
     from wrk_evaluation.house_valuation_analysis_same_community_price_03
-    group by block_cd,area_interval
+    group by community_id,area_interval
     ) t4
 on t1.community_id = t4.community_id
-where t1.month_dt >= substring(add_months(concat(t1.month_dt,'-01'),-6),1,7)
+where t1.deal_month >= substring(add_months(concat(t1.deal_month,'-01'),-6),1,7)
+
 
 
 
@@ -97,8 +103,9 @@ select
     t1.deal_price,
     t1.community_deal_cnt,
     t1.community_deal_rank,
-    t1.community_deal_med
-from wrk_evaluation.house_valuation_analysis_same_community_price_02
+    t1.community_deal_med,
+    current_timestamp() as timestamp_v
+from wrk_evaluation.house_valuation_analysis_same_community_price_02 t1
 
 
 

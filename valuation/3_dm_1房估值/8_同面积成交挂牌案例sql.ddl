@@ -1,5 +1,5 @@
 
-create table dm_evaluation.house_valuation_analysis_same_community_case(
+create table dm_evaluation.house_valuation_analysis_same_community_deal(
 community_id String COMMENT '小区id',
 area_interval String COMMENT '面积区间',
 type String COMMENT '类型、成交/挂牌',

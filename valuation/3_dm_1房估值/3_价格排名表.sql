@@ -1,10 +1,7 @@
-
-
-
 insert into dm_evaluation.house_valuation_analysis_goods_rank
 select
     t1.rack_house_id as goods_id,
-    t1.house_price as goods_price,
+    t1.house_avg_price as goods_price,
     t1.community_id,
     t1.block_cd,
     t2.monthly_avg_price_desc as community_avg_price,
