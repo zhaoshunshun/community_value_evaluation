@@ -1,4 +1,4 @@
-insert into dm_evaluation.house_valuation_analysis_goods_rank
+insert overwrite table  dm_evaluation.house_valuation_analysis_goods_rank
 select
     t1.rack_house_id as goods_id,
     t1.house_avg_price as goods_price,
@@ -6,14 +6,14 @@ select
     t1.block_cd,
     t2.monthly_avg_price_desc as community_avg_price,
     t3.block_avg_price as block_avg_price,
-    rank() over(partition by t1.block_cd order by t1.house_avg_price asc) as block_avg_price_rank,
+    rank() over(partition by t1.block_cd order by t1.house_avg_price desc) as block_avg_price_rank,
     t5.block_rack_cnt,
     t5.block_median_rack_price,
     t6.block_community_cnt,
     t7.block_community_avg_price_rank,
     t6.block_med_community_avg_price,
     t1.district_cd,
-    rank() over(partition by t1.district_cd order by t1.house_avg_price asc) as district_avg_price_rank,
+    rank() over(partition by t1.district_cd order by t1.house_avg_price desc) as district_avg_price_rank,
     current_timestamp() as timestamp_v
 from  dw_evaluation.house_valuation_rack_detail t1
 left join dw_evaluation.house_valuation_community_month_price t2
@@ -36,7 +36,7 @@ from dw_evaluation.house_valuation_community_month_price where ranks =1 group by
 ) t6 on t1.block_cd = t6.block_cd
 left join (
     select community_id,
-    rank() over(partition by block_cd order by monthly_avg_price_desc asc) as block_community_avg_price_rank
+    rank() over(partition by block_cd order by monthly_avg_price_desc desc) as block_community_avg_price_rank
     from dw_evaluation.house_valuation_community_month_price where ranks =1
 ) t7 on t1.community_id = t7.community_id
 where t1.month_dt = substring(current_date(),1,7)

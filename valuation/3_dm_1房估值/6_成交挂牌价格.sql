@@ -9,7 +9,7 @@ create table wrk_evaluation.house_valuation_analysis_same_community_price_01 as
         t1.bk_interval as area_interval,
         t1.house_avg_price as rack_price,
         t2.community_rack_cnt,
-        rank() over(partition by t1.community_id,t1.bk_interval order by t1.house_avg_price asc) as community_goods_rank
+        rank() over(partition by t1.community_id,t1.bk_interval order by t1.house_avg_price desc) as community_goods_rank
 from dw_evaluation.house_valuation_rack_detail t1
 left join (
     select community_id,count(1) as community_rack_cnt
@@ -55,7 +55,7 @@ left join (
     select
         community_id,
         area_interval,
-        rank() over(partition by block_cd,area_interval order by avg_price asc) as community_deal_rank
+        rank() over(partition by community_id,area_interval order by avg_price desc) as community_deal_rank
     from wrk_evaluation.house_valuation_analysis_same_community_price_03
     )  t3
 on t1.community_id = t3.community_id

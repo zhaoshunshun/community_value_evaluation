@@ -23,7 +23,7 @@ create table dw_evaluation.house_valuation_district_month_price as
     insert overwrite table dw_evaluation.house_valuation_district_month_price
 select district_cd,
        biz_time,
-       sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/count(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as district_avg_price,
+       sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/sum(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as district_avg_price,
        row_number() over(partition by district_cd order by biz_time desc) as ranks
 from dw_evaluation.house_valuation_community_month_price
 group by district_cd,biz_time
@@ -33,7 +33,7 @@ create table dw_evaluation.house_valuation_block_month_price as
     insert overwrite table dw_evaluation.house_valuation_block_month_price
 select block_cd,
        biz_time,
-       sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/count(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as block_avg_price,
+       sum(case when monthly_avg_price_desc <> 0 then monthly_avg_price_desc else 0 end )/sum(case when monthly_avg_price_desc <> 0 then 1 else 0 end) as block_avg_price,
        row_number() over(partition by block_cd order by biz_time desc) as ranks
 from dw_evaluation.house_valuation_community_month_price
 group by block_cd,biz_time

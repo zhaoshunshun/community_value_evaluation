@@ -17,7 +17,7 @@ select
     t3.block_cd,
     t3.block_name,
     t3.property_type,
-    t2.trademoney as deal_price,
+    cast(trademoney/10000 as decimal(10,2)) as deal_price,
     t2.tradearea as deal_area,
     t2.new_tradedate as deal_date,
     'cric' as info_src,

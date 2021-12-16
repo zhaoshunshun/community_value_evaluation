@@ -1,5 +1,5 @@
 create table wrk_evaluation.house_valuation_analysis_community_rank_01 as
-    insert into table wrk_evaluation.house_valuation_analysis_community_rank_01
+    insert overwrite  table wrk_evaluation.house_valuation_analysis_community_rank_01
 select
     community_id,
     district_cd,
@@ -13,7 +13,7 @@ group by
     block_cd
 
 create table wrk_evaluation.house_valuation_analysis_community_rank_02 as
-    insert into table wrk_evaluation.house_valuation_analysis_community_rank_02
+    insert overwrite table wrk_evaluation.house_valuation_analysis_community_rank_02
 select
     block_cd,
     district_cd,
@@ -26,7 +26,7 @@ group by
     district_cd
 
     create table wrk_evaluation.house_valuation_analysis_community_rank_03 as
-    insert into table wrk_evaluation.house_valuation_analysis_community_rank_03
+    insert overwrite table wrk_evaluation.house_valuation_analysis_community_rank_03
 select
     district_cd,
     sum(block_rack_cnt) as district_rack_cnt,

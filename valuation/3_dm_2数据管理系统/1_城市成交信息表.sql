@@ -5,7 +5,7 @@ select
 substring(t1.deal_date,1,7) as month,
 t1.city_cd,
 t1.city_name,
-sum(case when t1.avg_price is not null  then t1.avg_price else 0 end) / count(case when t1.avg_price is not null  then 1 else 0 end) as avg_price,
+sum(case when t1.avg_price is not null  then t1.avg_price else 0 end) / sum(case when t1.avg_price is not null  then 1 else 0 end) as avg_price,
 count(1) as deal_cnt,
 count(distinct t1.community_id) as deal_community_cnt,
 count(distinct case when t1.agency_name ='' then null else t1.agency_name end ) as deal_agency_cnt,

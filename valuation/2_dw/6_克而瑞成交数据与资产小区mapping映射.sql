@@ -14,7 +14,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t3.block_cd,
         t3.block_name,
         cast(t2.trademoney/t2.tradearea as int) as avg_price,
-        t2.trademoney as deal_price,
+        cast(t2.trademoney/10000 as decimal(10,2)) as deal_price,
         cast(t2.tradearea as decimal(10,2)) as deal_area,
         t2.new_tradedate as deal_date,
         regexp_replace(t2.room_type,'房','') as layout,
@@ -88,7 +88,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t3.block_cd,
         t3.block_name,
         regexp_replace(t1.deal_average_price,'元/m²','') as avg_price,
-        cast(regexp_replace(t1.deal_total_price,'万','') as decimal(11,2)) as deal_price,
+        cast(regexp_replace(t1.deal_total_price,'万','') as int) as deal_price,
         cast(regexp_replace(t1.area,'m²','') as decimal(10,2)) as deal_area,
         t1.deal_time as deal_date,
         t1.layout,
@@ -158,7 +158,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         t1.district_cd,
         t1.block_cd,
         t1.bk_interval,
-        sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/count(case when t1.avg_price is not null then 1 else 0 end) as avg_price,
+        sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/sum(case when t1.avg_price is not null then 1 else 0 end) as avg_price,
         count(1) as community_cnt
     from dw_evaluation.house_valuation_month_deal t1
     where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)

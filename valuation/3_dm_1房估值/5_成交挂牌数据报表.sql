@@ -8,9 +8,10 @@ t1.community_name,
 t1.block_cd,
 t1.bk_interval,
 count(1) as community_rack_cnt,
-sum(case when t1.house_avg_price is not null then t1.house_avg_price else 0 end)/count(case when t1.house_avg_price is not null then 1 else 0 end) as community_rack_price,
+sum(case when t1.house_avg_price is not null then t1.house_avg_price else 0 end)/sum(case when t1.house_avg_price is not null then 1 else 0 end) as community_rack_price,
 row_number() over(partition by t1.community_id order by t1.month_dt desc) as ranks
 from dw_evaluation.house_valuation_rack_detail t1
+    where t1.month_dt >= substring(add_months(current_timestamp(),-6),1,7)
 group by
     t1.month_dt,
     t1.community_id,
@@ -63,7 +64,7 @@ group by
     t1.community_id,
     t1.bk_interval,
     count(1) as community_deal_cnt,
-    sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/count(case when t1.avg_price is not null then 1 else 0 end) as community_deal_price
+    sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/sum(case when t1.avg_price is not null then 1 else 0 end) as community_deal_price
 
     from dw_evaluation.house_valuation_month_deal t1
 where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
@@ -99,7 +100,7 @@ select
     t1.block_cd,
     t1.bk_interval,
     count(1) as community_deal_cnt,
-    sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/count(case when t1.avg_price is not null then 1 else 0 end) as block_community_deal_price
+    sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/sum(case when t1.avg_price is not null then 1 else 0 end) as block_community_deal_price
 from dw_evaluation.house_valuation_month_deal t1
 where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
 group by
