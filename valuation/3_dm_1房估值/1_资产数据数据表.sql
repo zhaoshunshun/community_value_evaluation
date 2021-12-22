@@ -20,7 +20,8 @@ as
         t3.monthly_avg_price_desc as avg_price,
         t2.building_year,
         t4.distance as subway_dis,
-        current_timestamp() timestamp_v
+        current_timestamp() as timestamp_v,
+        substring(current_timestamp(),1,7) as batch_no
 from dw_evaluation.house_valuation_community_detail t1
 left join dw_evaluation.house_valuation_building_detail t2
 on t1.community_id  = t2.community_id

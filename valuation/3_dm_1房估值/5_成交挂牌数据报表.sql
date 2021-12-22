@@ -127,7 +127,8 @@ select
     t2.block_community_rack_price,
     t3.community_deal_price,
     t4.block_community_deal_price,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from wrk_evaluation.house_valuation_analysis_same_community_report_0101 t1
 left join wrk_evaluation.house_valuation_analysis_same_community_report_02 t2
 on t1.block_cd = t2.block_cd
@@ -141,3 +142,5 @@ left join wrk_evaluation.house_valuation_analysis_same_community_report_04 t4
 on t1.block_cd = t4.block_cd
 and t1.month_dt= t4.month_dt
 and t1.bk_interval = t4.bk_interval
+where t1.month_dt >=substring(add_months(current_timestamp(),-6),1,7)
+  and t1.month_dt <=substring(add_months(current_timestamp(),-1),1,7)

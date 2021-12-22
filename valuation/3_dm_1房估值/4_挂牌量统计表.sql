@@ -7,6 +7,7 @@ select
     count(1) as community_rack_cnt,
     rank() over(partition by block_cd order by count(1) desc) as block_community_rack_rank
 from dw_evaluation.house_valuation_rack_detail t1
+where t1.month_dt = substring(add_months(current_date,-1),1,7)
 group by
     community_id,
     district_cd,
@@ -51,7 +52,8 @@ select
     t3.district_min_block_rack_cnt,
     t3.district_med_community_rack_cnt,
     t3.district_max_block_rack_cnt,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from wrk_evaluation.house_valuation_analysis_community_rank_01 t1
 left join wrk_evaluation.house_valuation_analysis_community_rank_02 t2
 on t1.district_cd = t2.district_cd

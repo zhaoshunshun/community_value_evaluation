@@ -1,3 +1,6 @@
+
+truncate table dm_evaluation.house_valuation_analysis_same_community_sensitive;
+drop table dm_evaluation.house_valuation_analysis_same_community_sensitive;
 create table dm_evaluation.house_valuation_analysis_same_community_sensitive
 (
     community_id String COMMENT '小区id',
@@ -6,5 +9,6 @@ create table dm_evaluation.house_valuation_analysis_same_community_sensitive
     coordinate   String COMMENT '坐标',
     event_desc   String COMMENT '描述',
     event_time   String COMMENT '发生时间',
-    timestamp_v  String COMMENT '数据处理时间'
+    timestamp_v  String COMMENT '数据处理时间',
+    batch_no     String COMMENT '批次号'
 )COMMENT '敏感信息数据' STORED AS TEXTFILE;

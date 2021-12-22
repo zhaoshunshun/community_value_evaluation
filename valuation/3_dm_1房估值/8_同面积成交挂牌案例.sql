@@ -12,6 +12,7 @@ select
     house_avg_price,
     row_number() over(partition by community_id order by dt desc) as ranks
 from dw_evaluation.house_valuation_rack_detail
+    where month_dt <= substring(add_months(current_timestamp(),-1),1,7)
 
 truncate table wrk_evaluation.house_valuation_analysis_same_community_case_02;
 drop table wrk_evaluation.house_valuation_analysis_same_community_case_02;
@@ -27,7 +28,7 @@ select
     avg_price,
     row_number() over(partition by community_id order by deal_date desc) as ranks
 from dw_evaluation.house_valuation_month_deal t1
-    where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
+    where t1.deal_month <=substring(add_months(current_timestamp(),-1),1,7)
 
 insert overwrite table dm_evaluation.house_valuation_analysis_same_community_deal
 select
@@ -39,7 +40,8 @@ t1.house_layout as layout,
 t1.house_property_area as area,
 t1.house_price as total_price,
 t1.house_avg_price as avg_price,
-current_timestamp() as timestamp_v
+current_timestamp() as timestamp_v,
+substring(current_timestamp(),1,7) as batch_no
 from wrk_evaluation.house_valuation_analysis_same_community_case_01 t1
 where t1.ranks <=5
 
@@ -55,7 +57,8 @@ t1.layout as layout,
 t1.deal_area as area,
 t1.deal_price as total_price,
 t1.avg_price as avg_price,
-current_timestamp() as timestamp_v
+current_timestamp() as timestamp_v,
+substring(current_timestamp(),1,7) as batch_no
 from wrk_evaluation.house_valuation_analysis_same_community_case_02 t1
 where t1.ranks <=5
 

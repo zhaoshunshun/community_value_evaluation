@@ -12,12 +12,15 @@ create table wrk_evaluation.house_valuation_analysis_same_community_price_01 as
         rank() over(partition by t1.community_id,t1.bk_interval order by t1.house_avg_price desc) as community_goods_rank
 from dw_evaluation.house_valuation_rack_detail t1
 left join (
-    select community_id,count(1) as community_rack_cnt
+    select community_id,bk_interval,count(1) as community_rack_cnt
            from dw_evaluation.house_valuation_rack_detail
-    where month_dt >= substring(add_months(concat(month_dt,'-01'),-6),1,7)
-    group by community_id
+    where  month_dt = substring(add_months(current_timestamp(),-1),1,7)
+    group by community_id,bk_interval
     ) t2
 on t1.community_id  = t2.community_id
+    and t1.bk_interval = t2.bk_interval
+ where t1.month_dt = substring(add_months(current_timestamp(),-1),1,7)
+
 
 create table wrk_evaluation.house_valuation_analysis_same_community_price_03 as
     insert overwrite table wrk_evaluation.house_valuation_analysis_same_community_price_03
@@ -26,7 +29,7 @@ select community_id,
        bk_interval as area_interval,
        sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/count(case when t1.avg_price is not null then t1.avg_price else 0 end ) as avg_price
 from dw_evaluation.house_valuation_month_deal t1
-where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
+where t1.deal_month = substring(add_months(current_timestamp(),-1),1,7)
 group by community_id,block_cd,bk_interval
 
 
@@ -45,12 +48,14 @@ t4.community_deal_med
 from dw_evaluation.house_valuation_month_deal t1
 left join (
     select community_id,
+           bk_interval,
            count(1) as community_deal_cnt
     from dw_evaluation.house_valuation_month_deal t1
-    where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
-    group by community_id
+    where  t1.deal_month = substring(add_months(current_timestamp(),-1),1,7)
+    group by community_id,bk_interval
     ) t2
 on t1.community_id = t2.community_id
+    and t1.bk_interval = t2.bk_interval
 left join (
     select
         community_id,
@@ -69,7 +74,8 @@ left join (
     group by community_id,area_interval
     ) t4
 on t1.community_id = t4.community_id
-where t1.deal_month >= substring(add_months(concat(t1.deal_month,'-01'),-6),1,7)
+    and t1.bk_interval = t4.area_interval
+where t1.deal_month = substring(add_months(current_timestamp(),-1),1,7)
 
 
 
@@ -87,7 +93,8 @@ select
     null as community_deal_cnt,
     null as community_deal_rank,
     null as community_deal_med,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from  wrk_evaluation.house_valuation_analysis_same_community_price_01 t1
 
 
@@ -104,7 +111,8 @@ select
     t1.community_deal_cnt,
     t1.community_deal_rank,
     t1.community_deal_med,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from wrk_evaluation.house_valuation_analysis_same_community_price_02 t1
 
 

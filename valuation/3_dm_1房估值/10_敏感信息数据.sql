@@ -8,7 +8,8 @@ t2.event_type,
 t2.coordinate,
 t2.event_desc,
 t2.event_time,
-current_timestamp() as timestamp_v
+current_timestamp() as timestamp_v,
+substring(current_timestamp(),1,7) as batch_no
 from dw_evaluation.house_valuation_community_detail t1
 inner join dw_evaluation.house_valuation_analysis_same_community_sensitive t2
 on t1.city_name= t2.city

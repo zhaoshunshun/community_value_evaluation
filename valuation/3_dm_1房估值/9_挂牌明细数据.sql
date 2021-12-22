@@ -19,8 +19,10 @@ t1.house_fitment_name as fitment,
 t1.elevator as elevator,
 t1.ladder_ratio as elevator_desc,
 '' as subway_dis,
-current_timestamp() as timestamp_v
+current_timestamp() as timestamp_v,
+substring(current_timestamp(),1,7) as batch_no
 from dw_evaluation.house_valuation_rack_detail t1
 left join dw_evaluation.house_valuation_community_detail t2
 on t1.community_id = t2.community_id
-where t1.month_dt >=substring(add_months(current_timestamp(),-7),1,7)
+where t1.month_dt >=substring(add_months(current_timestamp(),-6),1,7)
+and t1.month_dt <=substring(add_months(current_timestamp(),-1),1,7)

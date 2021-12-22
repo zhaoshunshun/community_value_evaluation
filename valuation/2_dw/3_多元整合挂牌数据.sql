@@ -63,7 +63,7 @@ insert overwrite table dw_evaluation.house_valuation_rack_community_area_interva
         sum(case when t1.house_avg_price is not null then t1.house_avg_price else 0 end )/sum(case when t1.house_avg_price is not null then 1 else 0 end) as community_avg_price,
         count(1) as community_goods_cnt
 from dw_evaluation.house_valuation_rack_detail t1
-    where t1.month_dt >=substring(add_months(current_timestamp(),-6),1,7)
+    where t1.month_dt =substring(add_months(current_timestamp(),-1),1,7)
 group by
     t1.city_cd,
     t1.district_cd,

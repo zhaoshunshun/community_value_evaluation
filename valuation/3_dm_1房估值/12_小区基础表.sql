@@ -10,5 +10,6 @@ select
     community_id,
     community_name,
     community_addr,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from dw_evaluation.house_valuation_community_detail

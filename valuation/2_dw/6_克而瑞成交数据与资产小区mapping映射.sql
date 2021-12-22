@@ -161,7 +161,7 @@ create table wrk_evaluation.house_valuation_month_deal as
         sum(case when t1.avg_price is not null then t1.avg_price else 0 end)/sum(case when t1.avg_price is not null then 1 else 0 end) as avg_price,
         count(1) as community_cnt
     from dw_evaluation.house_valuation_month_deal t1
-    where t1.deal_month >=substring(add_months(current_timestamp(),-6),1,7)
+    where t1.deal_month =substring(add_months(current_timestamp(),-1),1,7)
     group by
         t1.community_id,
         t1.city_cd,

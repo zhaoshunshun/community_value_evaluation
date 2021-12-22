@@ -11,7 +11,8 @@ select
     t4.monthly_avg_price_desc as community_current_avg_price,
     (t1.monthly_avg_price_desc - t5.monthly_avg_price_desc)/t5.monthly_avg_price_desc as community_price_month,
     (t1.monthly_avg_price_desc - t6.monthly_avg_price_desc)/t6.monthly_avg_price_desc as community_price_half_year,
-    current_timestamp() as timestamp_v
+    current_timestamp() as timestamp_v,
+    substring(current_timestamp(),1,7) as batch_no
 from dw_evaluation.house_valuation_community_month_price t1
 left join  dw_evaluation.house_valuation_block_month_price t2
 on t1.block_cd = t2.block_cd and t2.biz_time = t1.biz_time
@@ -30,5 +31,7 @@ and t1.ranks = t5.ranks - 1
 left join dw_evaluation.house_valuation_community_month_price t6
 on t1.community_id = t6.community_id
 and t1.ranks = t6.ranks - 6
+where  t1.biz_time >=substring(add_months(current_date,-6),1,7)
+and t1.biz_time <=substring(add_months(current_date,-1),1,7)
 
 
