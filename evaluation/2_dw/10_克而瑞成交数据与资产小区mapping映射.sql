@@ -31,6 +31,7 @@ select
             and t3.upper_lower_ind = 1
 where t3.community_id is not null and t2.new_tradedate >= add_months(current_timestamp(),-13)
 and t3.city_name in ('苏州','天津','广州','郑州','上海','北京','合肥','杭州','西安','重庆','南京','武汉')
+and t2.roomusage not in ('非居住','工业','车库/车位')
 
 --贝壳
 insert into table dw_evaluation.community_evaluation_month_deal

@@ -14,4 +14,3 @@ from dw_evaluation.house_valuation_rack_community_area_interval t1
 full join dw_evaluation.house_valuation_deal_community_area_interval t2
           on t1.community_id=t2.community_id
               and t1.area_interval=t2.bk_interval
-where t1.community_goods_cnt is not null
