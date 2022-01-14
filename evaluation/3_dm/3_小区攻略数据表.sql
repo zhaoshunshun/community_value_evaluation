@@ -11,6 +11,6 @@ select
     t1.proprietor_speak,
     t1.facilities,
     t1.facilities_desc,
-    substring(current_timestamp(),1,7) as batch_no,    --批次号
+    substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_evaluation_bk_month_strategy  t1

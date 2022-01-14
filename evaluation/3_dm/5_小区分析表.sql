@@ -629,7 +629,7 @@ left join (
     t13.nearby_school_id,
     t13.nearby_1000_school_list,
     t13.nearby_3000_school_list,
-    substring(current_timestamp(),1,7) as batch_no,    --批次号
+    substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_month_report_base_info t1
 left join wrk_evaluation.community_evaluation_month_analysis_11 t2

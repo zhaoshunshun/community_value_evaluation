@@ -33,7 +33,7 @@ select
     case when t1.score>2 then  1 else 0 end as is_living_quility,
     case when t3.last_month_price is not null then 1 else 0 end as is_rack,
     case when t4.community_id  is not null then 1 else 0  end as is_deal,
-    substring(current_timestamp(),1,7) as batch_no,    --批次号
+    substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_month_report_base_info t1
 left join dw_evaluation.community_avg_price_cal t2

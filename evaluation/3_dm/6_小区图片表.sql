@@ -10,6 +10,6 @@ select
     t1.pic_data_source,
     t1.description,
     t1.pre_pic_md5,
-    substring(current_timestamp(),1,7) as batch_no,    --批次号
+    substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
     from dw_evaluation.community_evaluation_month_pic t1

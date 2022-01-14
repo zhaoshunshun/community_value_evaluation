@@ -15,7 +15,7 @@ select
     t1.school_segment_grade,
     t1.school_characteristics,
     case when t1.school_scope_road like '%460弄栖山家园%' then '' else t1.school_scope_road end as school_scope_road,
-    substring(current_timestamp(),1,7) as batch_no,    --批次号
+    substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
     current_timestamp() as timestamp_v          --数据处理时间
 from
     (

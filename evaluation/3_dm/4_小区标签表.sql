@@ -30,7 +30,7 @@ case when (t5.last_month_price - t5.current_price) / t5.current_price > (t8.last
 case when t1.green_rate >= t6.city_green_rate then '绿化率高' else '' end as label_green,
 case when t1.building_age <=5 then '房龄新' else '' end as label_age,
 case when t7.community_rent_days < t7.city_rent_days  then '房源好租' else '' end as label_rent,
-substring(current_timestamp(),1,7) as batch_no,    --批次号
+substring(add_months(current_timestamp(),-1),1,7) as batch_no,    --批次号
 current_timestamp() as timestamp_v          --数据处理时间
 from dw_evaluation.community_month_report_base_info t1
 left join dw_evaluation.community_month_report_convenient_info t2
