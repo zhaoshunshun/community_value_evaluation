@@ -1,0 +1,83 @@
+truncate table dm_evaluation.community_evaluation_detail;
+drop table if exists dm_evaluation.community_evaluation_detail;
+create table dm_evaluation.community_evaluation_detail
+(
+    community_id              STRING COMMENT '小区id',
+    community_name            STRING COMMENT '小区名称',
+    city_id                   STRING COMMENT '城市id',
+    city_name                 STRING COMMENT '城市名称',
+    community_addr            STRING COMMENT '小区地址',
+    district_id               STRING COMMENT '小区区域id',
+    district_name             STRING COMMENT '小区区域',
+    block_id                  STRING COMMENT '小区板块id',
+    block_name                STRING COMMENT '小区板块',
+    community_coordinate      STRING COMMENT '小区坐标',
+    community_fence           STRING COMMENT '小区围栏',
+    community_avg_price       STRING COMMENT '小区均价',
+    building_cnt              STRING COMMENT '小区楼栋数',
+    room_cnt                  STRING COMMENT '小区户数',
+    building_year             STRING COMMENT '建筑年代',
+    developer_corp            STRING COMMENT '开发商',
+    property_name             STRING COMMENT '物业管理公司',
+    property_fee              STRING COMMENT '物业费',
+    volume_rate               STRING COMMENT '容积率',
+    green_rate                STRING COMMENT '绿化率',
+    list_rate                 STRING COMMENT '挂牌率',
+    demand_rate               STRING COMMENT '供需比',
+    facilities                STRING COMMENT '小区设施',
+    facilities_cnt            STRING COMMENT '小区设施数',
+    facilities_level          STRING COMMENT '小区设施等级',
+    quality_stars             STRING COMMENT '小区品质星数',
+    quality_grade             STRING COMMENT '小区品质等级',
+    layout_1_rate             STRING COMMENT '小区户型分布_1房占比',
+    layout_2_rate             STRING COMMENT '小区户型分布_2房占比',
+    layout_3_rate             STRING COMMENT '小区户型分布_3房占比',
+    layout_4_rate             STRING COMMENT '小区户型分布_4房占比',
+    layout_other_rate         STRING COMMENT '小区户型分布_其他占比',
+    layout_1_area             STRING COMMENT '小区户型分布_1房面积区间',
+    layout_2_area             STRING COMMENT '小区户型分布_2房面积区间',
+    layout_3_area             STRING COMMENT '小区户型分布_3房面积区间',
+    layout_4_area             STRING COMMENT '小区户型分布_4房面积区间',
+    layout_other_area         STRING COMMENT '小区户型分布_其他面积区间',
+    layout_main               STRING COMMENT '小区户型分布_主要户型',
+    layout_main_area          STRING COMMENT '小区户型分布_主要户型面积区间',
+    layout_secondary          STRING COMMENT '小区户型分布_次要户型',
+    layout_least              STRING COMMENT '小区户型分布_最少户型',
+    layout_deal_1             STRING COMMENT '小区热销户型1_户型',
+    layout_deal_1_area        STRING COMMENT '小区热销户型1_户型面积区间',
+    layout_deal_1_total_price STRING COMMENT '小区热销户型1_户型总价区间',
+    layout_deal_1_cnt         STRING COMMENT '小区热销户型1_近半年成交套数',
+    layout_deal_1_avg_area    STRING COMMENT '小区热销户型1_近半年成交套数均面积',
+    layout_deal_1_avg_price   STRING COMMENT '小区热销户型1_近半年成交套数均总价',
+    layout_deal_1_url         STRING COMMENT '小区热销户型1_图片链接',
+    layout_deal_2             STRING COMMENT '小区热销户型2_户型',
+    layout_deal_2_area        STRING COMMENT '小区热销户型2_户型面积区间',
+    layout_deal_2_total_price STRING COMMENT '小区热销户型2_户型总价区间',
+    layout_deal_2_cnt         STRING COMMENT '小区热销户型2_近半年成交套数',
+    layout_deal_2_avg_area    STRING COMMENT '小区热销户型2_近半年成交套数均面积',
+    layout_deal_2_avg_price   STRING COMMENT '小区热销户型2_近半年成交套数均总价',
+    layout_deal_2_url         STRING COMMENT '小区热销户型2_图片链接',
+    leveling_cnt              STRING COMMENT '小区规划_小区平层数',
+    mult_level_cnt            STRING COMMENT '小区规划_小区多层数',
+    small_high_level_cnt      STRING COMMENT '小区规划_小区小高层数',
+    high_level_cnt            STRING COMMENT '小区规划_小区高层数',
+    volume_rate_percentile_approx     STRING COMMENT '小区规划_容积率水平',
+    comfort_level               STRING COMMENT '小区规划_舒适度',
+    --20201208,为支持房源评测需求增加字段
+    parking_num               STRING COMMENT '车位数',
+    parking_rate              STRING COMMENT '停车率',
+    building_type             STRING COMMENT '建筑类型',
+    act_area                  StRING COMMENT '占地面积',
+    house_years               INT    COMMENT '房龄',
+    investment_potential      STRING COMMENT '投资潜力',
+    comm_tag                  STRING COMMENT '小区标签(多标签之间以逗号分隔)',
+    timestamp_v               STRING COMMENT '数据处理时间'
+
+) COMMENT '小区详情表'
+    ROW FORMAT SERDE
+  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
+STORED AS INPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat'
+OUTPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
+;

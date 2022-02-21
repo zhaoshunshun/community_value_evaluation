@@ -1,0 +1,38 @@
+truncate table dm_evaluation.community_evaluation_medical_education_analysis;
+drop table if exists dm_evaluation.community_evaluation_medical_education_analysis;
+create table dm_evaluation.community_evaluation_medical_education_analysis
+(
+    community_id                STRING COMMENT '小区id',
+    community_name              STRING COMMENT '小区名称',
+    city_id                     STRING COMMENT '城市id',
+    city_name                   STRING COMMENT '城市名称',
+    hospital_3_class_cnt        STRING COMMENT '三甲医院数',
+    hospital_3_class_1          STRING COMMENT '三甲医院1',
+    hospital_3_class_2          STRING COMMENT '三甲医院2',
+    hospital_3_class_3          STRING COMMENT '三甲医院3',
+    hospital_3_class_1_distance STRING COMMENT '三甲医院1距离',
+    hospital_3_class_2_distance STRING COMMENT '三甲医院2距离',
+    hospital_3_class_3_distance STRING COMMENT '三甲医院3距离',
+    hospital_other_cnt          STRING COMMENT '其他医院数',
+    hospital_other_1            STRING COMMENT '其他医院1',
+    hospital_other_2            STRING COMMENT '其他医院2',
+    hospital_other_3            STRING COMMENT '其他医院3',
+    hospital_other_1_distance   STRING COMMENT '其他医院1距离',
+    hospital_other_2_distance   STRING COMMENT '其他医院2距离',
+    hospital_other_3_distance   STRING COMMENT '其他医院3距离',
+    medical_facility_desc       STRING COMMENT '医疗配套描述',
+    kindergarten_cnt            STRING COMMENT '幼儿园数量',
+    kindergarten_1              STRING COMMENT '幼儿园1',
+    kindergarten_1_distance     STRING COMMENT '幼儿园1距离',
+    primary_school_cnt          STRING COMMENT '小学数量',
+    primary_school_1            STRING COMMENT '小学1',
+    primary_school_1_distance   STRING COMMENT '小学1距离',
+    middle_school_cnt           STRING COMMENT '中学数量',
+    middle_school_1             STRING COMMENT '中学1',
+    middle_school_distiance     STRING COMMENT '中学1距离',
+    main_primary_school         STRING COMMENT '重点小学',
+    main_primary_coordinate     STRING COMMENT '重点小学坐标',
+    education_facility_desc     STRING COMMENT '周边教育描述',
+    conclusion_desc             STRING COMMENT '区位评测总结描述',
+    timestamp_v                 STRING COMMENT '数据处理时间'
+) COMMENT '小区医疗教育分析' STORED AS TEXTFILE;

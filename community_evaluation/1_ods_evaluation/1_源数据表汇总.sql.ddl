@@ -1,0 +1,14 @@
+ods_house.ods_community_rack_rate   挂牌表
+ods_house.community_deal_info    成交表
+ods_house.lj_app_chengjiao_detail 链家成交表
+ods_house.lianjia_app_chengjiao_detail  链家成交表
+ods_house.ods_house_community_school_info   学校表
+ods_house.ods_house_community_school_ref_info  学校表
+ods_house.ods_pyspider_db_community_ke_strategy   攻略表
+ods_house.ods_pyspider_db_poi_map  poi表
+ods_house.ods_client_base_info 大众点评数据      最新批次   1000028120200929_175105
+ods_house.ods_house_asset_community 框架小区表
+ods_house.ods_house_asset_building 框架楼栋表
+ods_house.ods_house_asset_unit 框架单元表
+ods_house.ods_house_asset_room 框架房号表
+dm_house.dm_community_price_cal 小区均价
